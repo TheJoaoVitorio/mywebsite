@@ -62,7 +62,6 @@ export default function ProjectDetails() {
     if (isLoading) {
         return (
             <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
-                <Header />
                 <LoadingSkeleton />
             </div>
         );
