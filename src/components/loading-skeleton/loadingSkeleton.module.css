@@ -1,0 +1,102 @@
+.skeletonContainer {
+    width: 100%;
+    min-height: 100vh;
+    padding: 100px 20px 40px;
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: pulse 1.5s infinite;
+}
+
+.skeletonHeader {
+    margin-bottom: 32px;
+}
+
+.skeletonTitle {
+    width: 60%;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #21262d;
+    margin-bottom: 16px;
+}
+
+.skeletonMeta {
+    display: flex;
+    gap: 24px;
+}
+
+.skeletonTag {
+    width: 80px;
+    height: 24px;
+    border-radius: 20px;
+    background-color: #21262d;
+}
+
+.skeletonHero {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: #21262d;
+    border-radius: 24px;
+    margin-bottom: 40px;
+}
+
+.skeletonContent {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.skeletonText {
+    width: 100%;
+    height: 20px;
+    background-color: #21262d;
+    margin-bottom: 12px;
+    border-radius: 4px;
+}
+
+.skeletonAside {
+    height: 200px;
+    background-color: #21262d;
+    border-radius: 12px;
+}
+
+@media (max-width: 900px) {
+    .skeletonContent {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .skeletonContainer {
+        padding: 80px 16px 32px;
+    }
+
+    .skeletonTitle {
+        width: 80%;
+        height: 36px;
+    }
+
+    .skeletonMeta {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .skeletonHero {
+        border-radius: 16px;
+        margin-bottom: 24px;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}

@@ -155,3 +155,54 @@
     /* Slightly smaller cards for list feel */
     gap: 20px;
 }
+
+@media (max-width: 1024px) {
+    .mainContent {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        width: 95%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profileSection {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 24px;
+    }
+
+    .contentSection {
+        padding: 20px;
+        border-radius: 24px;
+        padding-left: 20px;
+        /* Reset padding-left from desktop media query if needed, though desktop query was min-width */
+    }
+
+    .featuredProject {
+        width: 100%;
+        height: 180px;
+    }
+
+    .featuredTitle {
+        font-size: 1.5rem;
+    }
+
+    .projectsGrid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .projectsGrid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .featuredOverlay {
+        padding: 20px;
+    }
+}
