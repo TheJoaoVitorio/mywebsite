@@ -1,61 +1,57 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiHeart, FiEye, FiCheckCircle } from 'react-icons/fi';
 import { useState, useEffect } from 'react';
 import styles from './projectDetails.module.css';
 import Header from '../../components/header/header';
 import LoadingSkeleton from '../../components/loading-skeleton/LoadingSkeleton';
-
-// Mock data (extended)
-const mockProjectData = {
-    id: 1,
-    title: "E-Commerce Fullstack",
-    description: `Uma plataforma completa de comércio eletrônico projetada para oferecer a melhor experiência de usuário e facilidade de gestão para os administradores. 
-
-    O sistema conta com gestão de inventário em tempo real, processamento de pagamentos seguro via Stripe, e um painel administrativo intuitivo para acompanhamento de métricas de vendas. A interface foi construída seguindo os princípios de Design Atômico para garantir consistência e manutenibilidade.`,
-    tags: ["React", "Node.js", "PostgreSQL", "Stripe"],
-    imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
-    likes: 342,
-    views: 1205,
-    details: [
-        "Autenticação segura de usuários com JWT",
-        "Integração com gateway de pagamento Stripe",
-        "Upload e otimização de imagens na nuvem",
-        "Dashboard analítico para administradores",
-        "Design responsivo para mobile e desktop"
-    ],
-    photos: [
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    ]
-};
+import { getProjectById, incrementLikeCount, incrementViewCount, type Project } from '../../services/projectsService';
 
 export default function ProjectDetails() {
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    const [project, setProject] = useState(mockProjectData);
+    const [project, setProject] = useState<Project | null>(null);
     const [hasLiked, setHasLiked] = useState(false);
 
     useEffect(() => {
-        // Simulate fetching data and view increment
-        const timer = setTimeout(() => {
-            setProject(prev => ({
-                ...prev,
-                views: prev.views + 1
-            }));
+        async function fetchData() {
+            if (!id) return;
+
+            // Fetch project data
+            const fetchedProject = await getProjectById(id);
+            if (fetchedProject) {
+                setProject(fetchedProject);
+                // Increment view count in Firebase (fire and forget)
+                incrementViewCount(id);
+                // Increment local view count to reflect immediate change
+                setProject(prev => prev ? ({ ...prev, views: prev.views + 1 }) : null);
+            }
             setIsLoading(false);
-        }, 1500); // 1.5s skeleton duration
+        }
 
-        return () => clearTimeout(timer);
-    }, []);
+        fetchData();
 
-    const handleLike = () => {
-        if (!hasLiked) {
-            setProject(prev => ({
-                ...prev,
-                likes: prev.likes + 1
-            }));
+        // Restore hasLiked state from localStorage if you want persistence across page reloads
+        const likedProjects = JSON.parse(localStorage.getItem('likedProjects') || '{}');
+        if (id && likedProjects[id]) {
             setHasLiked(true);
+        }
+
+    }, [id]);
+
+    const handleLike = async () => {
+        if (!hasLiked && project && id) {
+            // Optimistic update
+            setProject(prev => prev ? ({ ...prev, likes: prev.likes + 1 }) : null);
+            setHasLiked(true);
+
+            // Persist to localStorage
+            const likedProjects = JSON.parse(localStorage.getItem('likedProjects') || '{}');
+            likedProjects[id] = true;
+            localStorage.setItem('likedProjects', JSON.stringify(likedProjects));
+
+            // Update Firebase
+            await incrementLikeCount(id);
         }
     };
 
@@ -67,8 +63,22 @@ export default function ProjectDetails() {
         );
     }
 
+    if (!project) {
+        return (
+            <div style={{ backgroundColor: '#121212', minHeight: '100vh', color: 'white', display: 'flex', justifyContent: 'center', padding: '50px' }}>
+                <div>
+                    <h2>Projeto não encontrado</h2>
+                    <button onClick={() => navigate(-1)} className={styles.backButton} style={{ marginTop: '20px' }}>
+                        <FiArrowLeft /> Voltar para Home
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
+            <Header />
             <div className={styles.container}>
                 <button onClick={() => navigate(-1)} className={styles.backButton}>
                     <FiArrowLeft /> Voltar para Home
