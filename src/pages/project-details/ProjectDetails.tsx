@@ -78,7 +78,7 @@ export default function ProjectDetails() {
 
     return (
         <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
-            <Header />
+
             <div className={styles.container}>
                 <button onClick={() => navigate(-1)} className={styles.backButton}>
                     <FiArrowLeft /> Voltar para Home
