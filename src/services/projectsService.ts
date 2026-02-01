@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, updateDoc, increment, type DocumentData } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, updateDoc, increment, addDoc, deleteDoc, type DocumentData } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 // Define the interface to match our UI needs
@@ -68,6 +68,42 @@ export const getProjectById = async (id: string): Promise<Project | null> => {
     } catch (error) {
         console.error("Error fetching project:", error);
         return null;
+    }
+};
+
+// Add a new project
+export const addProject = async (project: Omit<Project, 'id' | 'likes' | 'views'>): Promise<string> => {
+    try {
+        const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+            ...project,
+            likes: 0,
+            views: 0
+        });
+        return docRef.id;
+    } catch (error) {
+        console.error("Error adding project:", error);
+        throw error;
+    }
+};
+
+// Update an existing project
+export const updateProject = async (id: string, project: Partial<Project>): Promise<void> => {
+    try {
+        const docRef = doc(db, COLLECTION_NAME, id);
+        await updateDoc(docRef, { ...project });
+    } catch (error) {
+        console.error("Error updating project:", error);
+        throw error;
+    }
+};
+
+// Delete a project
+export const deleteProject = async (id: string): Promise<void> => {
+    try {
+        await deleteDoc(doc(db, COLLECTION_NAME, id));
+    } catch (error) {
+        console.error("Error deleting project:", error);
+        throw error;
     }
 };
 
