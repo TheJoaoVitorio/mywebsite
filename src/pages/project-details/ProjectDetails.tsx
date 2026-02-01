@@ -1,8 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiHeart, FiEye, FiCheckCircle } from 'react-icons/fi';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './projectDetails.module.css';
-import Header from '../../components/header/header';
 import LoadingSkeleton from '../../components/loading-skeleton/LoadingSkeleton';
 import { getProjectById, incrementLikeCount, incrementViewCount, type Project } from '../../services/projectsService';
 
@@ -13,6 +12,8 @@ export default function ProjectDetails() {
     const [project, setProject] = useState<Project | null>(null);
     const [hasLiked, setHasLiked] = useState(false);
 
+    const initialized = useRef(false);
+
     useEffect(() => {
         async function fetchData() {
             if (!id) return;
@@ -21,10 +22,15 @@ export default function ProjectDetails() {
             const fetchedProject = await getProjectById(id);
             if (fetchedProject) {
                 setProject(fetchedProject);
+
                 // Increment view count in Firebase (fire and forget)
-                incrementViewCount(id);
-                // Increment local view count to reflect immediate change
-                setProject(prev => prev ? ({ ...prev, views: prev.views + 1 }) : null);
+                // Use ref to prevent double increment in React Strict Mode
+                if (!initialized.current) {
+                    incrementViewCount(id);
+                    initialized.current = true;
+                    // Increment local view count to reflect immediate change
+                    setProject(prev => prev ? ({ ...prev, views: prev.views + 1 }) : null);
+                }
             }
             setIsLoading(false);
         }
@@ -38,6 +44,13 @@ export default function ProjectDetails() {
         }
 
     }, [id]);
+
+    const formatViews = (views: number) => {
+        if (views > 999) {
+            return (views / 1000).toFixed(1) + 'k';
+        }
+        return views;
+    };
 
     const handleLike = async () => {
         if (!hasLiked && project && id) {
@@ -78,7 +91,6 @@ export default function ProjectDetails() {
 
     return (
         <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
-
             <div className={styles.container}>
                 <button onClick={() => navigate(-1)} className={styles.backButton}>
                     <FiArrowLeft /> Voltar para Home
@@ -102,7 +114,7 @@ export default function ProjectDetails() {
                                 {project.likes} Likes
                             </div>
                             <div className={styles.statItem}>
-                                <FiEye /> {(project.views / 1000).toFixed(1)}k Views
+                                <FiEye /> {formatViews(project.views)} Views
                             </div>
                         </div>
                     </div>

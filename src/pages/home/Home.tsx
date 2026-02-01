@@ -12,6 +12,13 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const formatViews = (views: number) => {
+    if (views > 999) {
+      return (views / 1000).toFixed(1) + 'k';
+    }
+    return views;
+  };
+
   useEffect(() => {
     async function fetchProjects() {
       try {
@@ -73,7 +80,7 @@ function App() {
                       <FiHeart /> {featuredProject.likes}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <FiEye /> {(featuredProject.views / 1000).toFixed(1)}k
+                      <FiEye /> {formatViews(featuredProject.views)}
                     </div>
                   </div>
                 </div>

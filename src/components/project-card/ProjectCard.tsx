@@ -17,6 +17,13 @@ export default function ProjectCard({ id, title, imageUrl, likes, views }: Proje
         navigate(`/project/${id}`);
     };
 
+    const formatViews = (views: number) => {
+        if (views > 999) {
+            return (views / 1000).toFixed(1) + 'k';
+        }
+        return views;
+    };
+
     return (
         <div className={styles.card} onClick={handleClick}>
             <div className={styles.gradientOverlay} />
@@ -33,7 +40,7 @@ export default function ProjectCard({ id, title, imageUrl, likes, views }: Proje
                         <FiHeart size={12} fill="currentColor" /> {likes}
                     </span>
                     <span className={styles.statItem}>
-                        <FiEye size={12} /> {views}
+                        <FiEye size={12} /> {formatViews(views)}
                     </span>
                 </div>
             </div>
