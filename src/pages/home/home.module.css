@@ -20,7 +20,7 @@
 
     .profileSection {
         width: 296px;
-        /* Fixed width for profile sidebar */
+        /* Keep sidebar width consistent with intended layout, or 280px to match component? Component is 280px. */
         flex-shrink: 0;
     }
 
@@ -32,8 +32,45 @@
 
 .profileSection {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    /* Center on mobile if needed, or flex-start */
+}
+
+@media (min-width: 768px) {
+    .profileSection {
+        width: auto;
+        display: block;
+    }
 }
 
 .contentSection {
+    color: #c9d1d9;
+    background-color: #0F1010;
+    border-radius: 40px;
+    padding: 25px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.contentSection h1 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.contentSection h2 {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.contentSection p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
     color: #c9d1d9;
 }

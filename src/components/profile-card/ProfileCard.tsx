@@ -1,4 +1,4 @@
-import { FiUsers, FiMapPin, FiCode } from 'react-icons/fi';
+import { FiMapPin } from 'react-icons/fi';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import { SiFlutter, SiPython, SiReact, SiTypescript, SiNodedotjs, SiPostgresql } from 'react-icons/si';
 import styles from './profileCard.module.css';
@@ -29,7 +29,7 @@ export default function ProfileCard({
             <div className={styles.names}>
                 <span className={styles.displayName}>{name}</span>
                 <span className={styles.username}>
-                   <span className={styles.pronouns}>Software Developer</span>
+                    <span className={styles.pronouns}>Software Developer</span>
                 </span>
             </div>
 
@@ -68,7 +68,7 @@ export default function ProfileCard({
                 <h3 className={styles.achievementsTitle}>Stack & Technologies</h3>
                 <div className={styles.techStack}>
                     <div className={styles.techIcon} title="Delphi">
-                        <img src="/delphi-logo.png" alt='Delphi'  className={styles.techIcon} />
+                        <img src="/delphi-logo.png" alt='Delphi' className={styles.techIcon} />
                     </div>
                     <div className={styles.techIcon} title="Flutter">
                         <SiFlutter />
