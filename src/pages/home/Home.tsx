@@ -1,6 +1,6 @@
 import Header from '../../components/header/header'
 import ProfileCard from '../../components/profile-card/ProfileCard'
-import styles from './home.module.css'
+import styles from './Home.module.css'
 
 function App() {
 

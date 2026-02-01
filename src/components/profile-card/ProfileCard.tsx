@@ -6,23 +6,19 @@ import styles from './profileCard.module.css';
 interface ProfileCardProps {
     avatarUrl?: string;
     name?: string;
-    username?: string;
-    bio?: string;
     location?: string;
     linkedin?: string;
-    followers?: number;
-    following?: number;
+    enterprise?: string;
+    studies?: string;
 }
 
 export default function ProfileCard({
     avatarUrl = "https://avatars.githubusercontent.com/u/141413107?v=4",
     name = "João Vitório",
-    username = "TheJoaoVitorio",
-    bio = "he/him",
     location = "Brasil",
     linkedin = "in/joão-vitório",
-    followers = 19,
-    following = 56
+    enterprise = "Hotline Tecnologia",
+    studies = "Uninter - ADS"
 }: ProfileCardProps) {
     return (
         <div className={styles.card}>
@@ -33,7 +29,7 @@ export default function ProfileCard({
             <div className={styles.names}>
                 <span className={styles.displayName}>{name}</span>
                 <span className={styles.username}>
-                    {username} <span className={styles.pronouns}>· {bio}</span>
+                   <span className={styles.pronouns}>Software Developer</span>
                 </span>
             </div>
 
@@ -44,10 +40,9 @@ export default function ProfileCard({
             </div>
 
             <div className={styles.stats}>
-                <FiUsers className={styles.detailIcon} />
-                <span className={styles.statLink}>{followers}</span> followers
-                <span>·</span>
-                <span className={styles.statLink}>{following}</span> following
+                <span className={styles.statLink}>{enterprise}</span>
+                <strong>·</strong>
+                <span className={styles.statLink}>{studies}</span>
             </div>
 
             <div className={styles.details}>
@@ -73,7 +68,7 @@ export default function ProfileCard({
                 <h3 className={styles.achievementsTitle}>Stack & Technologies</h3>
                 <div className={styles.techStack}>
                     <div className={styles.techIcon} title="Delphi">
-                        <FiCode />
+                        <img src="/delphi-logo.png" alt='Delphi'  className={styles.techIcon} />
                     </div>
                     <div className={styles.techIcon} title="Flutter">
                         <SiFlutter />

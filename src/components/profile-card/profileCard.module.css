@@ -75,9 +75,9 @@
 }
 
 .actionButton a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(58, 62, 138, 0.262);
     color: #ffffff;
-    border-color: #ffffff;
+    border-color: #58a6ff;
 }
 
 .stats {
