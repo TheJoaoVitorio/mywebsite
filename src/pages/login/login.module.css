@@ -1,0 +1,265 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000000;
+    padding: 20px;
+}
+
+.loginCard {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    height: 700px;
+    background-color: #0F0F0F;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid #1f1f1f;
+}
+
+/* LEFT SIDE - FORM */
+.formSection {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #ffffff;
+    background-color: #0a0a0a;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.logoIcon {
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 30px 0;
+}
+
+/* Pill Switcher Mockup */
+.pillContainer {
+    display: flex;
+    background-color: #1a1a1a;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    width: fit-content;
+    gap: 10px;
+}
+
+.pill {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activePill {
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+/* Inputs */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 16px;
+    color: #666;
+}
+
+.input {
+    width: 100%;
+    padding: 16px 16px 16px 44px;
+    /* Space for icon */
+    background-color: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    border-color: #444;
+}
+
+.forgotPassword {
+    align-self: flex-end;
+    color: #666;
+    font-size: 0.85rem;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.submitButton {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+}
+
+.submitButton:hover {
+    opacity: 0.9;
+}
+
+.footer {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: #444;
+}
+
+.link {
+    color: #666;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+/* RIGHT SIDE - VISUAL */
+.visualSection {
+    flex: 1;
+    background: linear-gradient(135deg, #111 0%, #000 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 60px;
+    overflow: hidden;
+}
+
+/* Abstract Sphere Effect */
+.sphere {
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 60%);
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: 1;
+}
+
+.visualContent {
+    position: relative;
+    z-index: 2;
+}
+
+.visualBrand {
+    position: absolute;
+    top: 60px;
+    left: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.visualTitle {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 20px 0;
+    line-height: 1.1;
+}
+
+.visualText {
+    color: #888;
+    line-height: 1.6;
+    max-width: 400px;
+}
+
+.errorMessage {
+    color: #ff4444;
+    font-size: 0.9rem;
+    background: rgba(255, 68, 68, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .loginCard {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .visualSection {
+        display: none;
+    }
+
+    .formSection {
+        padding: 40px;
+    }
+}
