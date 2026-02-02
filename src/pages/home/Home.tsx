@@ -3,7 +3,7 @@ import { FiHeart, FiEye } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import ProfileCard from '../../components/profile-card/ProfileCard'
 import ProjectCard from '../../components/project-card/ProjectCard'
-import styles from './Home.module.css'
+import styles from './home.module.css'
 import { getProjects, type Project } from '../../services/projectsService';
 
 function App() {
@@ -60,9 +60,12 @@ function App() {
           <div>
             <h1>Sobre mim</h1>
             <p>
-              Atualmente, atuo com <strong>Delphi</strong> em uma empresa especializada em automação comercial.
-              Hoje, concentro meus estudos e projetos no desenvolvimento mobile com <strong>Flutter</strong> e na criação de interfaces web modernas com <strong>React</strong> e <strong>Next.js</strong>.
-              Para o backend, utilizo <strong>TypeScript</strong> e <strong>Python (FastAPI)</strong> para construir APIs performáticas e escaláveis.
+              Atualmente trabalho com <strong>Delphi</strong> em uma empresa que atua na área de automação comercial, onde
+              eu desenvolvo um software de <strong>migração de dados</strong>, de outros sistemas para o sistema da empresa que atuo. 
+              Com o desenvolvimento do conversor, pude aprender diversos tópicos na área de desenvolvimento, como <strong>Design Paterns</strong>,
+              <strong> SQL</strong> e <strong>NoSQL</strong>, melhorias de performace utilizando ArrayDML recurso do FireDAC, e entre outros tópicos.
+              No tempo livre, eu programo com <strong>Flutter</strong> em projetos mobile e quando quero criar algo para Web, utilizo <strong>React</strong> , <strong>NextJs</strong> e para o 
+              BackEnd uso <strong>Python</strong> com <strong>FastApi</strong> ou uso <strong>Express</strong> + <strong>TypeScript</strong>.
             </p>
           </div>
 
