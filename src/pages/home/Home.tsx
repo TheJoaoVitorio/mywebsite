@@ -58,13 +58,13 @@ function App() {
         </div>
         <div className={styles.contentSection}>
           <div>
-            <h1>Sobre mim</h1>
+            <h2>Sobre mim</h2>
             <p>
               Atualmente trabalho com <strong>Delphi</strong> em uma empresa que atua na área de automação comercial, onde
-              eu desenvolvo um software de <strong>migração de dados</strong>, de outros sistemas para o sistema da empresa que atuo. 
+              eu desenvolvo um software de <strong>migração de dados</strong>, de outros sistemas para o sistema da empresa que atuo.
               Com o desenvolvimento do conversor, pude aprender diversos tópicos na área de desenvolvimento, como <strong>Design Paterns</strong>,
               <strong> SQL</strong> e <strong>NoSQL</strong>, melhorias de performace utilizando ArrayDML recurso do FireDAC, e entre outros tópicos.
-              No tempo livre, eu programo com <strong>Flutter</strong> em projetos mobile e quando quero criar algo para Web, utilizo <strong>React</strong> , <strong>NextJs</strong> e para o 
+              No tempo livre, eu programo com <strong>Flutter</strong> em projetos mobile e quando quero criar algo para Web, utilizo <strong>React</strong> , <strong>NextJs</strong> e para o
               BackEnd uso <strong>Python</strong> com <strong>FastApi</strong> ou uso <strong>Express</strong> + <strong>TypeScript</strong>.
             </p>
           </div>
@@ -75,7 +75,12 @@ function App() {
             {/* Hero Project */}
             {featuredProject ? (
               <div className={styles.featuredProject} onClick={() => navigate(`/project/${featuredProject.id}`)}>
-                <img src={featuredProject.imageUrl} alt={featuredProject.title} className={styles.featuredImage} />
+                <img
+                  src={featuredProject.imageUrl}
+                  alt={featuredProject.title}
+                  className={styles.featuredImage}
+                  fetchPriority="high"
+                />
                 <div className={styles.featuredOverlay}>
                   <h3 className={styles.featuredTitle}>{featuredProject.title}</h3>
                   <div className={styles.featuredStats}>

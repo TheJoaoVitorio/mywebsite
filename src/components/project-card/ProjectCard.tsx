@@ -31,6 +31,7 @@ export default function ProjectCard({ id, title, imageUrl, likes, views }: Proje
                 src={imageUrl}
                 alt={title}
                 className={styles.image}
+                loading="lazy"
             />
 
             <div className={styles.content}>

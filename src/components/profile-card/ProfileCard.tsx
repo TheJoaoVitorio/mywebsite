@@ -27,7 +27,7 @@ export default function ProfileCard({
             </div>
 
             <div className={styles.names}>
-                <span className={styles.displayName}>{name}</span>
+                <h1 className={styles.displayName}>{name}</h1>
                 <span className={styles.username}>
                     <span className={styles.pronouns}>Software Developer</span>
                 </span>
@@ -68,7 +68,7 @@ export default function ProfileCard({
                 <h3 className={styles.achievementsTitle}>Stack & Technologies</h3>
                 <div className={styles.techStack}>
                     <div className={styles.techIcon} title="Delphi">
-                        <img src="/delphi-logo.png" alt='Delphi' className={styles.techIcon} />
+                        <img src="delphi-logo.png" alt='Delphi' className={styles.techIcon} />
                     </div>
                     <div className={styles.techIcon} title="Flutter">
                         <SiFlutter />
