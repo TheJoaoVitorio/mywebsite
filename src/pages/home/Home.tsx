@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react';
 import ProfileCard from '../../components/profile-card/ProfileCard'
 import ProjectCard from '../../components/project-card/ProjectCard'
 import styles from './home.module.css'
-import { getProjects, type Project } from '../../services/projectsService';
+import { subscribeToProjects, type Project } from '../../services/projectsService';
 
 function App() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const formatViews = (views: number) => {
     if (views > 999) {
@@ -20,31 +19,16 @@ function App() {
   };
 
   useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const data = await getProjects();
-        setProjects(data);
-      } catch (error) {
-        console.error("Failed to fetch projects:", error);
-        setError("Erro ao buscar projetos. Verifique o console ou as regras do Firebase.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProjects();
+    const unsubscribe = subscribeToProjects((data) => {
+      setProjects(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
     return <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando projetos...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#ff6b6b', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-        <p>{error}</p>
-        <p style={{ color: '#ccc', fontSize: '0.9rem' }}>Tente reiniciar o servidor (npm run dev) para carregar as variáveis de ambiente.</p>
-      </div>
-    );
   }
 
   const featuredProject = projects.length > 0 ? projects[0] : null;

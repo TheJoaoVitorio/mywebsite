@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, updateDoc, increment, addDoc, deleteDoc, type DocumentData } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, updateDoc, increment, addDoc, deleteDoc, type DocumentData, onSnapshot } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 // Define the interface to match our UI needs
@@ -16,6 +16,7 @@ export interface Project {
 
 const COLLECTION_NAME = "projects";
 
+// Fetch all projects for the Home page
 // Fetch all projects for the Home page
 export const getProjects = async (): Promise<Project[]> => {
     try {
@@ -40,6 +41,30 @@ export const getProjects = async (): Promise<Project[]> => {
         console.error("Error fetching projects:", error);
         return [];
     }
+};
+
+// Subscribe to projects for real-time updates
+export const subscribeToProjects = (onUpdate: (projects: Project[]) => void) => {
+    return onSnapshot(collection(db, COLLECTION_NAME), (querySnapshot) => {
+        const projects: Project[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data() as DocumentData;
+            projects.push({
+                id: doc.id,
+                title: data.title || "",
+                description: data.description || "",
+                imageUrl: data.imageUrl || "",
+                likes: data.likes || 0,
+                views: data.views || 0,
+                tags: data.tags || [],
+                details: data.details || [],
+                photos: data.photos || []
+            });
+        });
+        onUpdate(projects);
+    }, (error) => {
+        console.error("Error watching projects:", error);
+    });
 };
 
 // Fetch a single project by ID
