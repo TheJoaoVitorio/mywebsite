@@ -4,8 +4,9 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebaseConfig';
 import { getProjects, addProject, updateProject, deleteProject, type Project } from '../../services/projectsService';
 import styles from './admin.module.css';
-import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft } from 'react-icons/fi';
+import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload } from 'react-icons/fi';
 import ImageModal from '../../components/image-modal/ImageModal';
+import { uploadToCloudinary } from '../../services/cloudinaryService';
 
 export default function Admin() {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Admin() {
     // UI State
     const [view, setView] = useState<'list' | 'edit'>('list');
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +40,35 @@ export default function Admin() {
         }
         fetch();
     }, [refresh]);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery') => {
+        if (!e.target.files || e.target.files.length === 0) return;
+
+        const file = e.target.files[0];
+        setUploading(true);
+
+        try {
+            const secureUrl = await uploadToCloudinary(file);
+
+            if (type === 'cover') {
+                setFormData(prev => ({
+                    ...prev,
+                    imageUrl: secureUrl
+                }));
+            } else {
+                setFormData(prev => ({
+                    ...prev,
+                    photos: prev.photos ? `${prev.photos}\n${secureUrl}` : secureUrl
+                }));
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao fazer upload da imagem. Verifique suas credenciais.");
+        } finally {
+            setUploading(false);
+        }
+    };
+
 
     const openModal = (url: string) => {
         setSelectedImage(url);
@@ -252,12 +283,26 @@ export default function Admin() {
                             <div className={styles.sectionContent}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.label}>Cover Image URL</label>
-                                    <input
-                                        className={styles.input}
-                                        value={formData.imageUrl}
-                                        onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                                        placeholder="https://images.unsplash.com/..."
-                                    />
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <input
+                                            className={styles.input}
+                                            value={formData.imageUrl}
+                                            onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
+                                            placeholder="https://res.cloudinary.com/..."
+                                            style={{ flex: 1 }}
+                                        />
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'auto', marginBottom: 0 }}>
+                                            <FiUpload />
+                                            <input
+                                                type="file"
+                                                hidden
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, 'cover')}
+                                                disabled={uploading}
+                                            />
+                                        </label>
+                                    </div>
+                                    {uploading && <span style={{ fontSize: '12px', color: '#888' }}>Uploading...</span>}
                                 </div>
                                 {formData.imageUrl && (
                                     <div style={{ marginBottom: 20, borderRadius: 8, overflow: 'hidden', border: '1px solid #333' }}>
@@ -275,13 +320,25 @@ export default function Admin() {
 
                                 <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
                                     <label className={styles.label}>Gallery Images (One URL per line)</label>
-                                    <textarea
-                                        className={styles.textarea}
-                                        style={{ minHeight: '100px' }}
-                                        value={formData.photos}
-                                        onChange={e => setFormData({ ...formData, photos: e.target.value })}
-                                        placeholder={"https://img1.com\nhttps://img2.com"}
-                                    />
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                                        <textarea
+                                            className={styles.textarea}
+                                            style={{ minHeight: '100px', flex: 1 }}
+                                            value={formData.photos}
+                                            onChange={e => setFormData({ ...formData, photos: e.target.value })}
+                                            placeholder={"https://img1.com\nhttps://img2.com"}
+                                        />
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'auto', marginTop: 0 }}>
+                                            <FiUpload />
+                                            <input
+                                                type="file"
+                                                hidden
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, 'gallery')}
+                                                disabled={uploading}
+                                            />
+                                        </label>
+                                    </div>
                                 </div>
                                 {formData.photos && (
                                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
