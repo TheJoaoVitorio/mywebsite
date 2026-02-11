@@ -246,7 +246,14 @@ export default function Admin() {
                                 </div>
                                 {formData.imageUrl && (
                                     <div style={{ marginBottom: 20, borderRadius: 8, overflow: 'hidden', border: '1px solid #333' }}>
-                                        <img src={formData.imageUrl} alt="Preview" style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }} />
+                                        <img
+                                            src={formData.imageUrl}
+                                            alt="Preview"
+                                            style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }}
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x150?text=Invalid+Image+URL';
+                                            }}
+                                        />
                                     </div>
                                 )}
 
@@ -260,6 +267,22 @@ export default function Admin() {
                                         placeholder={"https://img1.com\nhttps://img2.com"}
                                     />
                                 </div>
+                                {formData.photos && (
+                                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                        {formData.photos.split('\n').map(s => s.trim()).filter(Boolean).map((url, index) => (
+                                            <div key={index} style={{ width: '100px', height: '100px', borderRadius: '25px', overflow: 'hidden', border: '1px solid #333' }}>
+                                                <img
+                                                    src={url}
+                                                    alt={`Preview ${index + 1}`}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/100?text=Invalid';
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
