@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './projectDetails.module.css';
 import LoadingSkeleton from '../../components/loading-skeleton/LoadingSkeleton';
 import { getProjectById, incrementLikeCount, incrementViewCount, type Project } from '../../services/projectsService';
+import ImageModal from '../../components/image-modal/ImageModal';
 
 export default function ProjectDetails() {
     const { id } = useParams<{ id: string }>();
@@ -11,6 +12,10 @@ export default function ProjectDetails() {
     const [isLoading, setIsLoading] = useState(true);
     const [project, setProject] = useState<Project | null>(null);
     const [hasLiked, setHasLiked] = useState(false);
+
+    // Modal State
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState('');
 
     const initialized = useRef(false);
 
@@ -44,6 +49,16 @@ export default function ProjectDetails() {
         }
 
     }, [id]);
+
+    const openModal = (url: string) => {
+        setSelectedImage(url);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedImage('');
+    };
 
     const formatViews = (views: number) => {
         if (views > 999) {
@@ -147,10 +162,23 @@ export default function ProjectDetails() {
                     <h2>Galeria</h2>
                     <div className={styles.galleryGrid}>
                         {project.photos.map((photo, index) => (
-                            <img key={index} src={photo} alt={`Galeria ${index + 1}`} className={styles.galleryImage} />
+                            <img
+                                key={index}
+                                src={photo}
+                                alt={`Galeria ${index + 1}`}
+                                className={styles.galleryImage}
+                                onClick={() => openModal(photo)}
+                                style={{ cursor: 'pointer' }}
+                            />
                         ))}
                     </div>
                 </section>
+
+                <ImageModal
+                    isOpen={isModalOpen}
+                    imageUrl={selectedImage}
+                    onClose={closeModal}
+                />
             </div>
         </div>
     );
