@@ -3,7 +3,7 @@ import { FiHeart, FiEye } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import ProfileCard from '../../components/profile-card/ProfileCard'
 import ProjectCard from '../../components/project-card/ProjectCard'
-import styles from './home.module.css'
+import styles from './Home.module.css'
 import { subscribeToProjects, type Project } from '../../services/projectsService';
 
 function App() {
