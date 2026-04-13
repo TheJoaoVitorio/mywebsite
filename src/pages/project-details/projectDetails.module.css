@@ -6,6 +6,7 @@
     box-sizing: border-box;
     max-width: 1200px;
     margin: 0 auto;
+    font-family: 'Google Sans';
 }
 
 .backButton {
