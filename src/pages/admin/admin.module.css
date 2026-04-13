@@ -173,8 +173,14 @@
     transition: all 0.2s;
     display: flex;
     align-items: center;
+    justify-content: center; /* Added */
     gap: 8px;
     font-size: 0.9rem;
+}
+
+.uploadInput {
+    display: flex;
+    gap: 10px;
 }
 
 .secondaryButton:hover {
