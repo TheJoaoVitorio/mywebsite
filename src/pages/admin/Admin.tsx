@@ -4,7 +4,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebaseConfig';
 import { getProjects, addProject, updateProject, deleteProject, type Project } from '../../services/projectsService';
 import styles from './admin.module.css';
-import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload } from 'react-icons/fi';
+import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink } from 'react-icons/fi';
 import ImageModal from '../../components/image-modal/ImageModal';
 import { uploadToCloudinary } from '../../services/cloudinaryService';
 
@@ -28,6 +28,7 @@ export default function Admin() {
         title: '',
         description: '',
         imageUrl: '',
+        link: '',
         tags: '',
         details: '',
         photos: ''
@@ -91,6 +92,7 @@ export default function Admin() {
             title: '',
             description: '',
             imageUrl: '',
+            link: '',
             tags: '',
             details: '',
             photos: ''
@@ -104,6 +106,7 @@ export default function Admin() {
             title: project.title,
             description: project.description,
             imageUrl: project.imageUrl,
+            link: project.link || '',
             tags: project.tags.join(', '),
             details: project.details.join('\n'),
             photos: project.photos.join('\n')
@@ -118,6 +121,7 @@ export default function Admin() {
                 title: formData.title,
                 description: formData.description,
                 imageUrl: formData.imageUrl,
+                link: formData.link,
                 tags: formData.tags.split(',').map(s => s.trim()).filter(Boolean),
                 details: formData.details.split('\n').filter(Boolean),
                 photos: formData.photos.split('\n').filter(Boolean)
@@ -262,13 +266,26 @@ export default function Admin() {
                                         placeholder="e.g. Finance Dashboard"
                                     />
                                 </div>
-                                <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
+                                <div className={styles.inputGroup}>
                                     <label className={styles.label}>Description</label>
                                     <textarea
                                         className={styles.textarea}
                                         value={formData.description}
                                         onChange={e => setFormData({ ...formData, description: e.target.value })}
                                         placeholder="Describe the main purpose and features..."
+                                    />
+                                </div>
+                                <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
+                                    <label className={styles.label}>
+                                        <FiLink style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                                        Project Link (URL)
+                                    </label>
+                                    <input
+                                        className={styles.input}
+                                        value={formData.link}
+                                        onChange={e => setFormData({ ...formData, link: e.target.value })}
+                                        placeholder="https://meu-projeto.vercel.app"
+                                        type="url"
                                     />
                                 </div>
                             </div>
