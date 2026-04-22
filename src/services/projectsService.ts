@@ -7,6 +7,7 @@ export interface Project {
     title: string;
     description: string;
     imageUrl: string;
+    link?: string;
     likes: number;
     views: number;
     tags: string[];
@@ -29,6 +30,7 @@ export const getProjects = async (): Promise<Project[]> => {
                 title: data.title || "",
                 description: data.description || "",
                 imageUrl: data.imageUrl || "",
+                link: data.link || "",
                 likes: data.likes || 0,
                 views: data.views || 0,
                 tags: data.tags || [],
@@ -54,6 +56,7 @@ export const subscribeToProjects = (onUpdate: (projects: Project[]) => void) => 
                 title: data.title || "",
                 description: data.description || "",
                 imageUrl: data.imageUrl || "",
+                link: data.link || "",
                 likes: data.likes || 0,
                 views: data.views || 0,
                 tags: data.tags || [],
@@ -80,6 +83,7 @@ export const getProjectById = async (id: string): Promise<Project | null> => {
                 title: data.title || "",
                 description: data.description || "",
                 imageUrl: data.imageUrl || "",
+                link: data.link || "",
                 likes: data.likes || 0,
                 views: data.views || 0,
                 tags: data.tags || [],

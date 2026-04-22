@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiArrowLeft, FiHeart, FiEye, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiHeart, FiEye, FiCheckCircle, FiExternalLink } from 'react-icons/fi';
 import { useState, useEffect, useRef } from 'react';
 import styles from './projectDetails.module.css';
 import LoadingSkeleton from '../../components/loading-skeleton/LoadingSkeleton';
@@ -120,14 +120,17 @@ export default function ProjectDetails() {
                             ))}
                         </div>
                         <div className={styles.stats}>
-                            <div
-                                className={`${styles.statItem} ${hasLiked ? styles.liked : ''}`}
+                            <button
+                                className={`${styles.likeButton} ${hasLiked ? styles.likeButtonActive : ''}`}
                                 onClick={handleLike}
-                                style={{ cursor: 'pointer' }}
+                                disabled={hasLiked}
                             >
-                                <FiHeart fill={hasLiked ? "#e25555" : "none"} color={hasLiked ? "#e25555" : "currentColor"} />
+                                <FiHeart
+                                    fill={hasLiked ? "#58a6ff" : "none"}
+                                    color={hasLiked ? "#58a6ff" : "currentColor"}
+                                />
                                 {project.likes} Likes
-                            </div>
+                            </button>
                             <div className={styles.statItem}>
                                 <FiEye /> {formatViews(project.views)} Views
                             </div>
@@ -143,6 +146,17 @@ export default function ProjectDetails() {
                     <section className={styles.descriptionSection}>
                         <h2>Sobre o Projeto</h2>
                         <p className={styles.description}>{project.description}</p>
+                        {project.link && (
+                            <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.projectLink}
+                            >
+                                <FiExternalLink />
+                                Visitar Projeto
+                            </a>
+                        )}
                     </section>
 
                     <aside className={styles.detailsSection}>
