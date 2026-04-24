@@ -8,12 +8,21 @@ import ProtectedRoute from './components/protected-route/ProtectedRoute';
 const ProjectDetails = lazy(() => import('./pages/project-details/ProjectDetails'));
 const Login = lazy(() => import('./pages/login/Login'));
 const Admin = lazy(() => import('./pages/admin/Admin'));
+const Utils = lazy(() => import('./pages/utils/Utils'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route
+          path="/utils"
+          element={
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Loading tools...</div>}>
+              <Utils />
+            </Suspense>
+          }
+        />
         <Route
           path="/project/:id"
           element={

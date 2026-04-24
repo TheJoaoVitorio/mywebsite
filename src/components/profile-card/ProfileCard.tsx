@@ -1,5 +1,6 @@
 import { FiMapPin } from 'react-icons/fi';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { SiFlutter, SiPython, SiReact, SiTypescript, SiNodedotjs, SiPostgresql } from 'react-icons/si';
 import styles from './profileCard.module.css';
 
@@ -62,6 +63,12 @@ export default function ProfileCard({
                         {linkedin}
                     </a>
                 </div>
+            </div>
+
+            <div className={styles.actionButton}>
+                <Link to="/utils">
+                    Tools
+                </Link>
             </div>
 
             <div className={styles.achievements}>
