@@ -9,6 +9,7 @@ const ProjectDetails = lazy(() => import('./pages/project-details/ProjectDetails
 const Login = lazy(() => import('./pages/login/Login'));
 const Admin = lazy(() => import('./pages/admin/Admin'));
 const Utils = lazy(() => import('./pages/utils/Utils'));
+const CalculadoraServico = lazy(() => import('./pages/utils/tools/calculadora-servico/CalculadoraServico'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -20,6 +21,14 @@ createRoot(document.getElementById('root')!).render(
           element={
             <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Loading tools...</div>}>
               <Utils />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/tools/calculadora-servico"
+          element={
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando calculadora...</div>}>
+              <CalculadoraServico />
             </Suspense>
           }
         />

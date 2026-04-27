@@ -43,6 +43,12 @@ export default function Utils() {
                     <a 
                         key={tool.id}
                         href={tool.link || '#'} 
+                        onClick={(event) => {
+                            if (tool.link && tool.link.startsWith('/')) {
+                                event.preventDefault();
+                                navigate(tool.link);
+                            }
+                        }}
                         target={tool.link && tool.link.startsWith('http') ? "_blank" : undefined}
                         rel={tool.link && tool.link.startsWith('http') ? "noopener noreferrer" : undefined}
                         style={{ 
