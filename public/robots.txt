@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://joaovitorio.dev/sitemap.xml
+Sitemap: https://joaovitorio.dev.br/sitemap.xml
