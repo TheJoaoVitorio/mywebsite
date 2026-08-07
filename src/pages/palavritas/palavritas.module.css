@@ -9,6 +9,7 @@
   font-family: 'Google Sans', Inter, system-ui, sans-serif;
   padding: 20px;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .header {
