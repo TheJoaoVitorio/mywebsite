@@ -45,6 +45,7 @@ export default function ProjectDetails() {
         // Restore hasLiked state from localStorage if you want persistence across page reloads
         const likedProjects = JSON.parse(localStorage.getItem('likedProjects') || '{}');
         if (id && likedProjects[id]) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setHasLiked(true);
         }
 

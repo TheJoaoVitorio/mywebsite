@@ -10,6 +10,7 @@ const Login = lazy(() => import('./pages/login/Login'));
 const Admin = lazy(() => import('./pages/admin/Admin'));
 const Utils = lazy(() => import('./pages/utils/Utils'));
 const CalculadoraServico = lazy(() => import('./pages/utils/tools/calculadora-servico/CalculadoraServico'));
+const Palavritas = lazy(() => import('./pages/palavritas/Palavritas.tsx'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -60,6 +61,15 @@ createRoot(document.getElementById('root')!).render(
             }
           />
         </Route>
+        
+        <Route
+          path="/utils/palavritas"
+          element={
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando jogo...</div>}>
+              <Palavritas />
+            </Suspense>
+          }
+        />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
