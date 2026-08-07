@@ -18,5 +18,11 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://joaovitorio.dev.br/utils/palavritas</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
   <!-- Projects are dynamic, ideally this should be generated, but this is a start -->
 </urlset>
