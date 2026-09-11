@@ -1,11 +1,75 @@
+:root,
+:root[data-theme='dark'] {
+  --bg-page: #121212;
+  --bg-surface: #0F1010;
+  --bg-surface-secondary: #161b22;
+  --bg-surface-elevated: #1c2128;
+  --bg-input: #141414;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+
+  --text-primary: #ffffff;
+  --text-secondary: #c9d1d9;
+  --text-muted: #8b949e;
+
+  --border-primary: #30363d;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+
+  --accent-primary: #58a6ff;
+  --accent-hover: #79b8ff;
+  --accent-subtle: rgba(88, 166, 255, 0.12);
+  --accent-contrast: #0e0f11;
+
+  --hero-overlay: linear-gradient(to top, rgb(23, 23, 23) 15%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --skeleton-bg: #21262d;
+
+  --tag-bg: rgba(255, 255, 255, 0.1);
+  --tag-border: rgba(255, 255, 255, 0.1);
+  --tag-text: #c9d1d9;
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light-coffee'] {
+  --bg-page: #F6F2EB;
+  --bg-surface: #FCFAF7;
+  --bg-surface-secondary: #F0E7DC;
+  --bg-surface-elevated: #E6DACB;
+  --bg-input: #FFFFFF;
+  --bg-hover: rgba(92, 70, 56, 0.06);
+
+  --text-primary: #2D2118;
+  --text-secondary: #5C4638;
+  --text-muted: #8C7364;
+
+  --border-primary: #DFD2C2;
+  --border-subtle: rgba(92, 70, 56, 0.12);
+
+  --accent-primary: #A35D2E;
+  --accent-hover: #8A4B20;
+  --accent-subtle: rgba(163, 93, 46, 0.12);
+  --accent-contrast: #FFFFFF;
+
+  --hero-overlay: linear-gradient(to top, rgba(45, 33, 24, 0.88) 15%, rgba(45, 33, 24, 0.45) 50%, transparent 100%);
+  --card-shadow: 0 10px 30px rgba(78, 54, 39, 0.08);
+  --shadow-sm: 0 2px 8px rgba(78, 54, 39, 0.06);
+  --skeleton-bg: #E6DACB;
+
+  --tag-bg: rgba(163, 93, 46, 0.1);
+  --tag-border: rgba(163, 93, 46, 0.2);
+  --tag-text: #7A421E;
+
+  color-scheme: light;
+}
+
 :root {
   font-family: 'Google Sans', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #121212;
+  color: var(--text-secondary);
+  background-color: var(--bg-page);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,14 +82,25 @@ body {
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #121212;
+  background-color: var(--bg-page);
+  color: var(--text-secondary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
   width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+a {
+  color: var(--accent-primary);
 }

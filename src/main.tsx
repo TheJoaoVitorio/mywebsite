@@ -2,6 +2,8 @@ import { StrictMode, Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css'
+import { ThemeProvider } from './context/ThemeContext'
+import ThemeToggle from './components/theme-toggle/ThemeToggle'
 import Home from './pages/home/Home.tsx'
 import ProtectedRoute from './components/protected-route/ProtectedRoute';
 
@@ -14,13 +16,15 @@ const Palavritas = lazy(() => import('./pages/palavritas/Palavritas.tsx'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <ThemeProvider>
+      <ThemeToggle />
+      <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/utils"
           element={
-            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Loading tools...</div>}>
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Loading tools...</div>}>
               <Utils />
             </Suspense>
           }
@@ -28,7 +32,7 @@ createRoot(document.getElementById('root')!).render(
         <Route
           path="/tools/calculadora-servico"
           element={
-            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando calculadora...</div>}>
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando calculadora...</div>}>
               <CalculadoraServico />
             </Suspense>
           }
@@ -36,7 +40,7 @@ createRoot(document.getElementById('root')!).render(
         <Route
           path="/project/:id"
           element={
-            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando...</div>}>
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando...</div>}>
               <ProjectDetails />
             </Suspense>
           }
@@ -44,7 +48,7 @@ createRoot(document.getElementById('root')!).render(
         <Route
           path="/login"
           element={
-            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando...</div>}>
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando...</div>}>
               <Login />
             </Suspense>
           }
@@ -55,7 +59,7 @@ createRoot(document.getElementById('root')!).render(
           <Route
             path="/admin"
             element={
-              <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando...</div>}>
+              <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando...</div>}>
                 <Admin />
               </Suspense>
             }
@@ -65,12 +69,13 @@ createRoot(document.getElementById('root')!).render(
         <Route
           path="/utils/palavritas"
           element={
-            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando jogo...</div>}>
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando jogo...</div>}>
               <Palavritas />
             </Suspense>
           }
         />
       </Routes>
     </BrowserRouter>
+    </ThemeProvider>
   </StrictMode>,
 )

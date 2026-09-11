@@ -86,7 +86,7 @@ export default function ProjectDetails() {
 
     if (isLoading) {
         return (
-            <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
+            <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh' }}>
                 <LoadingSkeleton />
             </div>
         );
@@ -94,7 +94,7 @@ export default function ProjectDetails() {
 
     if (!project) {
         return (
-            <div style={{ backgroundColor: '#121212', minHeight: '100vh', color: 'white', display: 'flex', justifyContent: 'center', padding: '50px' }}>
+            <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', color: 'var(--text-primary)', display: 'flex', justifyContent: 'center', padding: '50px' }}>
                 <div>
                     <h2>Projeto não encontrado</h2>
                     <button onClick={() => navigate(-1)} className={styles.backButton} style={{ marginTop: '20px' }}>
@@ -106,7 +106,7 @@ export default function ProjectDetails() {
     }
 
     return (
-        <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
+        <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh' }}>
             <div className={styles.container}>
                 <button onClick={() => navigate(-1)} className={styles.backButton}>
                     <FiArrowLeft /> Voltar para Home
@@ -127,8 +127,8 @@ export default function ProjectDetails() {
                                 disabled={hasLiked}
                             >
                                 <FiHeart
-                                    fill={hasLiked ? "#58a6ff" : "none"}
-                                    color={hasLiked ? "#58a6ff" : "currentColor"}
+                                    fill={hasLiked ? "var(--accent-primary)" : "none"}
+                                    color={hasLiked ? "var(--accent-primary)" : "currentColor"}
                                 />
                                 {project.likes} Likes
                             </button>

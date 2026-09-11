@@ -14,7 +14,7 @@ export default function ProtectedRoute() {
     }, []);
 
     if (isAuthenticated === null) {
-        return <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#0d1117', color: '#fff' }}>Carregando...</div>;
+        return <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'var(--bg-page)', color: 'var(--text-primary)' }}>Carregando...</div>;
     }
 
     return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;

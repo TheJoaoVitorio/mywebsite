@@ -319,10 +319,10 @@ export default function Palavritas() {
                   }
                   
                   // We inject the final background color as a CSS var so the animation can use it
-                  let finalColor = '#121212';
+                  let finalColor = 'var(--bg-surface)';
                   if (statusCell === 'correct') finalColor = '#3aa394';
                   else if (statusCell === 'present') finalColor = '#d3ad69';
-                  else if (statusCell === 'absent') finalColor = '#313131';
+                  else if (statusCell === 'absent') finalColor = 'var(--bg-surface-elevated)';
 
                   return (
                     <div 
