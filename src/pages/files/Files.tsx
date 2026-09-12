@@ -18,7 +18,9 @@ import {
   FiHardDrive,
   FiFolder,
   FiPackage,
-  FiRefreshCw
+  FiRefreshCw,
+  FiInfo,
+  FiX
 } from 'react-icons/fi';
 import styles from './files.module.css';
 import {
@@ -60,6 +62,11 @@ export default function Files() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // Mobile state: active tab between 'grid' and 'inspector'
+  const [mobileTab, setMobileTab] = useState<'grid' | 'inspector'>('grid');
+  // Mobile search toggle
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   // Fetch live content for the active location
   const loadContent = useCallback(async (location: CurrentLocation, isManualRefresh: boolean = false) => {
@@ -111,15 +118,25 @@ export default function Files() {
     return [...folders, ...files];
   }, [folders, files, searchQuery]);
 
+  const handleOpenFolder = (folder: FolderItem) => {
+    setSearchQuery('');
+    setHistory(prev => [...prev, { key: folder.key, name: folder.name }]);
+    setMobileTab('grid');
+  };
+
   // Click handlers
   const handleItemClick = (item: ExplorerItem) => {
+    // If user clicks an already selected folder, open it (ideal for mobile touch)
+    if (selectedItem?.id === item.id && item.type === 'folder') {
+      handleOpenFolder(item);
+      return;
+    }
     setSelectedItem(item);
   };
 
   const handleItemDoubleClick = (item: ExplorerItem) => {
     if (item.type === 'folder') {
-      setSearchQuery('');
-      setHistory(prev => [...prev, { key: item.key, name: item.name }]);
+      handleOpenFolder(item);
     } else if (item.downloadUrl) {
       window.open(item.downloadUrl, '_blank', 'noopener,noreferrer');
     }
@@ -129,6 +146,7 @@ export default function Files() {
     if (history.length > 1) {
       setSearchQuery('');
       setHistory(prev => prev.slice(0, prev.length - 1));
+      setMobileTab('grid');
     } else {
       navigate('/');
     }
@@ -220,7 +238,7 @@ export default function Files() {
             </button>
             <button
               type="button"
-              className={styles.navBtn}
+              className={`${styles.navBtn} ${styles.desktopOnly}`}
               disabled
               title="Avançar"
             >
@@ -228,7 +246,7 @@ export default function Files() {
             </button>
             <button
               type="button"
-              className={styles.navBtn}
+              className={`${styles.navBtn} ${styles.desktopOnly}`}
               title="Visualização em Grade"
             >
               <FiGrid />
@@ -239,15 +257,18 @@ export default function Files() {
             {history.map((loc, idx) => {
               const isLast = idx === history.length - 1;
               return (
-                <span key={loc.key} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  {idx > 0 && <span style={{ opacity: 0.4 }}>/</span>}
+                <span key={loc.key} className={styles.breadcrumbItem}>
+                  {idx > 0 && <span className={styles.breadcrumbSlash}>/</span>}
                   {isLast ? (
-                    <span>{loc.name}</span>
+                    <span className={styles.breadcrumbCurrent}>{loc.name}</span>
                   ) : (
                     <button
                       type="button"
                       className={styles.folderBreadcrumbBtn}
-                      onClick={() => setHistory(prev => prev.slice(0, idx + 1))}
+                      onClick={() => {
+                        setHistory(prev => prev.slice(0, idx + 1));
+                        setMobileTab('grid');
+                      }}
                     >
                       {loc.name}
                     </button>
@@ -258,7 +279,7 @@ export default function Files() {
           </div>
 
           <div className={styles.titlebarControls}>
-            {/* Refresh Button to check new files in MediaFire in real time */}
+            {/* Refresh Button */}
             <button
               type="button"
               className={`${styles.refreshBtn} ${isRefreshing ? styles.spinning : ''}`}
@@ -268,7 +289,18 @@ export default function Files() {
               <FiRefreshCw />
             </button>
 
-            <div className={styles.searchWrapper}>
+            {/* Mobile Search Toggle Button */}
+            <button
+              type="button"
+              className={`${styles.mobileSearchToggleBtn} ${isMobileSearchOpen ? styles.mobileSearchToggleBtnActive : ''}`}
+              onClick={() => setIsMobileSearchOpen(prev => !prev)}
+              title="Pesquisar arquivos"
+            >
+              <FiSearch />
+            </button>
+
+            {/* Desktop Search Input */}
+            <div className={styles.desktopSearchWrapper}>
               <FiSearch className={styles.searchIconBtn} />
               <input
                 type="text"
@@ -279,7 +311,8 @@ export default function Files() {
               />
             </div>
 
-            <div className={styles.windowButtons}>
+            {/* Desktop macOS Window Dots */}
+            <div className={`${styles.windowButtons} ${styles.desktopOnly}`}>
               <button
                 type="button"
                 className={`${styles.windowDot} ${styles.dotClose}`}
@@ -300,10 +333,56 @@ export default function Files() {
           </div>
         </div>
 
+        {/* Mobile Search Bar Dropdown */}
+        {isMobileSearchOpen && (
+          <div className={styles.mobileSearchBar}>
+            <FiSearch className={styles.mobileSearchInputIcon} />
+            <input
+              type="text"
+              className={styles.mobileSearchInput}
+              placeholder="Pesquisar arquivos ou pastas..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className={styles.mobileSearchClearBtn}
+                onClick={() => setSearchQuery('')}
+                title="Limpar pesquisa"
+              >
+                <FiX size={16} />
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Mobile Segmented Control (Arquivos vs Detalhes) */}
+        <div className={styles.mobileSegmentTabs}>
+          <button
+            type="button"
+            className={`${styles.mobileTabBtn} ${mobileTab === 'grid' ? styles.mobileTabBtnActive : ''}`}
+            onClick={() => setMobileTab('grid')}
+          >
+            <FiGrid size={15} />
+            <span>Arquivos {displayedItems.length > 0 ? `(${displayedItems.length})` : ''}</span>
+          </button>
+          <button
+            type="button"
+            className={`${styles.mobileTabBtn} ${mobileTab === 'inspector' ? styles.mobileTabBtnActive : ''}`}
+            onClick={() => setMobileTab('inspector')}
+          >
+            <FiInfo size={15} />
+            <span>Detalhes</span>
+            {selectedItem && <span className={styles.mobileTabBadge} />}
+          </button>
+        </div>
+
         {/* Window Content (Grid Left + Inspector Right) */}
         <div className={styles.windowContent}>
           {/* Main Grid Area */}
-          <div className={styles.mainGridArea}>
+          <div className={`${styles.mainGridArea} ${mobileTab !== 'grid' ? styles.mobileHidden : ''}`}>
             {isLoading ? (
               <div className={styles.emptyGrid}>
                 <FiRefreshCw size={36} className={styles.spinning} style={{ color: 'var(--accent-primary)', marginBottom: 16 }} />
@@ -326,7 +405,7 @@ export default function Files() {
                       className={`${styles.gridItem} ${isSelected ? styles.gridItemSelected : ''}`}
                       onClick={() => handleItemClick(item)}
                       onDoubleClick={() => handleItemDoubleClick(item)}
-                      title={isFolder ? `Pasta ${item.name} (${item.fileCount} itens) - Clique duplo para abrir` : `${item.name} (${item.size})`}
+                      title={isFolder ? `Pasta ${item.name} (${item.fileCount} itens)` : `${item.name} (${item.size})`}
                     >
                       <div className={styles.itemIconBox}>
                         {isFolder ? (
@@ -351,8 +430,20 @@ export default function Files() {
             )}
           </div>
 
-          {/* Inspector Panel (Right) */}
-          <aside className={styles.inspectorPanel}>
+          {/* Inspector Panel (Right on Desktop, Tab on Mobile) */}
+          <aside className={`${styles.inspectorPanel} ${mobileTab !== 'inspector' ? styles.mobileHidden : ''}`}>
+            {/* Mobile return button */}
+            <div className={styles.mobileInspectorBackRow}>
+              <button
+                type="button"
+                className={styles.mobileBackToFilesBtn}
+                onClick={() => setMobileTab('grid')}
+              >
+                <FiChevronLeft size={18} />
+                <span>Voltar aos Arquivos</span>
+              </button>
+            </div>
+
             {selectedItem ? (
               <>
                 {/* Big Preview Poster */}
@@ -388,7 +479,7 @@ export default function Files() {
                     <button
                       type="button"
                       className={`${styles.actionBtn} ${styles.actionBtnPrimary}`}
-                      onClick={() => handleItemDoubleClick(selectedItem)}
+                      onClick={() => handleOpenFolder(selectedItem)}
                       title="Abrir pasta"
                     >
                       <FiFolder />
@@ -488,6 +579,65 @@ export default function Files() {
             )}
           </aside>
         </div>
+
+        {/* Mobile Floating Action Bar (Sticky at bottom on mobile when in grid mode with item selected) */}
+        {selectedItem && mobileTab === 'grid' && (
+          <div className={styles.mobileQuickBar}>
+            <div
+              className={styles.mobileQuickInfo}
+              onClick={() => setMobileTab('inspector')}
+              title="Ver detalhes completos"
+            >
+              <div className={styles.mobileQuickIconBox}>
+                {selectedItem.type === 'folder' ? (
+                  <FiFolder className={styles.mobileQuickIcon} />
+                ) : (
+                  getFileGraphicIcon(selectedItem)
+                )}
+              </div>
+              <div className={styles.mobileQuickMeta}>
+                <span className={styles.mobileQuickName}>{selectedItem.name}</span>
+                <span className={styles.mobileQuickSub}>
+                  {selectedItem.type === 'file' ? selectedItem.size : `${selectedItem.fileCount} arquivos`}
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.mobileQuickButtons}>
+              {selectedItem.type === 'file' ? (
+                <a
+                  href={selectedItem.downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.mobilePrimaryActionBtn}
+                  title="Baixar arquivo"
+                >
+                  <FiDownload size={15} />
+                  <span>Baixar</span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.mobilePrimaryActionBtn}
+                  onClick={() => handleOpenFolder(selectedItem)}
+                  title="Abrir pasta"
+                >
+                  <FiFolder size={15} />
+                  <span>Abrir</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                className={styles.mobileDetailsActionBtn}
+                onClick={() => setMobileTab('inspector')}
+                title="Ver detalhes"
+              >
+                <FiInfo size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
