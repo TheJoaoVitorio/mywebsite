@@ -13,6 +13,7 @@ const Admin = lazy(() => import('./pages/admin/Admin'));
 const Utils = lazy(() => import('./pages/utils/Utils'));
 const CalculadoraServico = lazy(() => import('./pages/utils/tools/calculadora-servico/CalculadoraServico'));
 const Palavritas = lazy(() => import('./pages/palavritas/Palavritas.tsx'));
+const Files = lazy(() => import('./pages/files/Files.tsx'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,6 +22,14 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route
+          path="/files"
+          element={
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando arquivos...</div>}>
+              <Files />
+            </Suspense>
+          }
+        />
         <Route
           path="/utils"
           element={
