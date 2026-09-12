@@ -71,6 +71,12 @@ export default function ProfileCard({
                 </Link>
             </div>
 
+            <div className={styles.actionButton}>
+                <Link to="/files">
+                    Files
+                </Link>
+            </div>
+
             <div className={styles.achievements}>
                 <h3 className={styles.achievementsTitle}>Stack & Technologies</h3>
                 <div className={styles.techStack}>
