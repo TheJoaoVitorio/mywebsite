@@ -1,265 +1,358 @@
 .container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     background-color: #000000;
-    padding: 20px;
-}
-
-.loginCard {
-    display: flex;
-    width: 100%;
-    max-width: 1100px;
-    height: 700px;
-    background-color: #0F0F0F;
-    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-    border: 1px solid #1f1f1f;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
-/* LEFT SIDE - FORM */
-.formSection {
-    flex: 1;
-    padding: 60px;
+/* 3D Liquid Chrome Ambient Background */
+.background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/liquid-chrome-bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Subtle Vignette & Depth */
+.vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.85) 100%);
+    pointer-events: none;
+}
+
+/* Liquid Glass Floating Modal */
+.modalCard {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 740px;
+    min-height: 440px;
+    background: rgba(12, 13, 16, 0.74);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    border-radius: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 1px 0 rgba(255, 255, 255, 0.04),
+        0 40px 90px -20px rgba(0, 0, 0, 0.95),
+        0 0 1px 1px rgba(255, 255, 255, 0.03);
+    padding: 46px 60px 48px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    color: #ffffff;
-    background-color: #0a0a0a;
+    box-sizing: border-box;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 40px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.logoIcon {
-    width: 24px;
-    height: 24px;
-    background-color: #fff;
-    border-radius: 4px;
-}
-
-.title {
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 0 0 10px 0;
-}
-
-.subtitle {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0 0 30px 0;
-}
-
-/* Pill Switcher Mockup */
-.pillContainer {
-    display: flex;
-    background-color: #1a1a1a;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-    width: fit-content;
-    gap: 10px;
-}
-
-.pill {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    color: #666;
-    transition: all 0.2s;
+/* Close Button (top-right X) */
+.closeButton {
+    position: absolute;
+    top: 32px;
+    right: 36px;
     background: transparent;
     border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 1.35rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    outline: none;
+    padding: 0;
 }
 
-.activePill {
-    background-color: #2a2a2a;
-    color: #fff;
+.closeButton:hover {
+    color: rgba(255, 255, 255, 0.8);
+    transform: rotate(90deg) scale(1.06);
 }
 
-/* Inputs */
-.form {
+/* Header with Tabs: Sign In / Join */
+.tabHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    margin-bottom: 34px;
+    user-select: none;
+}
+
+.tabItem {
+    position: relative;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2.25rem;
+    letter-spacing: -0.8px;
+    font-family: inherit;
+    padding: 0 4px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    outline: none;
+    transition: color 0.25s ease;
+}
+
+.tabItemActive {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.tabItemInactive {
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 400;
+}
+
+.tabItemInactive:hover {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Luminous Blue Indicator Capsule */
+.activeIndicator,
+.orangeIndicator {
+    width: 38px;
+    height: 3.5px;
+    border-radius: 999px;
+    background: #0088ff;
+    background: linear-gradient(90deg, #0080ff, #00b4ff);
+    box-shadow:
+        0 0 14px 2px #0088ff,
+        0 0 24px 4px rgba(0, 136, 255, 0.65),
+        0 2px 6px rgba(0, 136, 255, 0.85);
+    margin-top: 8px;
+}
+
+.indicatorPlaceholder {
+    height: 3.5px;
+    margin-top: 8px;
+}
+
+/* Inner Form Container */
+.formContainer {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Error Banner */
+.errorMessage {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    text-align: center;
+    line-height: 1.4;
+    animation: fadeIn 0.25s ease-out;
+}
+
+/* Info Notice for Join tab */
+.infoNotice {
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.65);
+    padding: 20px 24px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    text-align: center;
+    line-height: 1.5;
+    animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .inputGroup {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .label {
-    font-size: 0.85rem;
-    color: #666;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.15px;
 }
 
 .inputWrapper {
     position: relative;
     display: flex;
     align-items: center;
-}
-
-.inputIcon {
-    position: absolute;
-    left: 16px;
-    color: #666;
+    width: 100%;
 }
 
 .input {
     width: 100%;
-    padding: 16px 16px 16px 44px;
-    /* Space for icon */
-    background-color: #141414;
-    border: 1px solid #2a2a2a;
+    height: 46px;
     border-radius: 12px;
-    color: #fff;
-    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    padding: 0 16px;
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-family: inherit;
     outline: none;
-    transition: border-color 0.2s;
     box-sizing: border-box;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inputWithIcon {
+    padding-right: 44px;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
 }
 
 .input:focus {
-    border-color: #444;
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(255, 255, 255, 0.03);
 }
 
-.forgotPassword {
-    align-self: flex-end;
-    color: #666;
-    font-size: 0.85rem;
-    text-decoration: none;
-    cursor: pointer;
-    margin-top: -10px;
-}
-
-.submitButton {
-    background-color: #ffffff;
-    color: #000000;
+/* Password Eye Toggle */
+.eyeButton {
+    position: absolute;
+    right: 12px;
+    background: transparent;
     border: none;
-    padding: 16px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.28);
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 8px;
+    transition: color 0.2s ease, transform 0.15s ease;
+    outline: none;
+}
+
+.eyeButton:hover {
+    color: rgba(255, 255, 255, 0.75);
+    transform: scale(1.06);
+}
+
+/* Submit Action Button */
+.submitButton {
+    margin-top: 8px;
+    width: 100%;
+    height: 46px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow:
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.12),
+        0 4px 14px rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.92rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: opacity 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
 }
 
-.submitButton:hover {
-    opacity: 0.9;
+.submitButton:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
+        0 8px 20px rgba(0, 0, 0, 0.45);
 }
 
-.footer {
-    margin-top: auto;
-    font-size: 0.85rem;
-    color: #444;
+.submitButton:active:not(:disabled) {
+    transform: translateY(1px);
 }
 
-.link {
-    color: #666;
-    text-decoration: none;
-    margin-left: 5px;
+.submitButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
-/* RIGHT SIDE - VISUAL */
-.visualSection {
-    flex: 1;
-    background: linear-gradient(135deg, #111 0%, #000 100%);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 60px;
-    overflow: hidden;
-}
-
-/* Abstract Sphere Effect */
-.sphere {
-    position: absolute;
-    bottom: -100px;
-    right: -100px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 60%);
-    border-radius: 50%;
-    filter: blur(40px);
-    z-index: 1;
-}
-
-.visualContent {
-    position: relative;
-    z-index: 2;
-}
-
-.visualBrand {
-    position: absolute;
-    top: 60px;
-    left: 60px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.visualTitle {
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: #fff;
-    margin: 0 0 20px 0;
-    line-height: 1.1;
-}
-
-.visualText {
-    color: #888;
-    line-height: 1.6;
-    max-width: 400px;
-}
-
-.errorMessage {
-    color: #ff4444;
-    font-size: 0.9rem;
-    background: rgba(255, 68, 68, 0.1);
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+.portalBadge {
+    margin-top: 6px;
     text-align: center;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.18);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    user-select: none;
 }
 
-@media (max-width: 900px) {
-    .loginCard {
-        flex-direction: column;
-        height: auto;
-    }
+/* Spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+}
 
-    .visualSection {
-        display: none;
-    }
-
-    .formSection {
-        padding: 40px;
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
+
+/* Responsive adjustments */
+@media (max-width: 760px) {
+    .modalCard {
+        max-width: 100%;
+        padding: 38px 26px 42px;
+        border-radius: 28px;
+    }
+
+    .tabItem {
+        font-size: 1.85rem;
+    }
+
+    .tabHeader {
+        gap: 24px;
+        margin-bottom: 28px;
+    }
+
+    .closeButton {
+        top: 22px;
+        right: 22px;
+    }
+}
