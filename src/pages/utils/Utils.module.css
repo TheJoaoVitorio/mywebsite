@@ -1,8 +1,8 @@
 .container {
     width: 100vw;
     min-height: 100vh;
-    background-color: #0b0c0c;
-    color: #ffffff;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     padding: 60px 40px;
     box-sizing: border-box;
@@ -10,14 +10,15 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .backBtn {
     align-self: flex-start;
     margin-bottom: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #8b949e;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
     padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
@@ -26,11 +27,13 @@
     align-items: center;
     gap: 8px;
     transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
 }
 
 .backBtn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    background: var(--bg-hover);
+    border-color: var(--accent-primary);
 }
 
 .header {
@@ -52,12 +55,14 @@
 
 .logoIcon {
     font-size: 24px;
-    color: #ffffff;
+    color: var(--accent-primary);
+    transition: color 0.3s ease;
 }
 
 .logoText {
     font-size: 20px;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .title {
@@ -66,15 +71,16 @@
     line-height: 1.1;
     margin: 0 0 20px 0;
     letter-spacing: -1px;
+    color: var(--text-primary);
 }
 
 .titleHighlight {
-    color: #8b949e;
+    color: var(--text-muted);
 }
 
 .subtitle {
     font-size: 16px;
-    color: #8b949e;
+    color: var(--text-muted);
     line-height: 1.5;
     margin: 0;
 }
@@ -103,8 +109,9 @@
 
 /* Base card styles */
 .cardDark {
-    background-color: #161819;
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
 }
 
 .cardCenter {
@@ -129,7 +136,7 @@
 .cardLabel {
     font-size: 16px;
     font-weight: 500;
-    color: #c9d1d9;
+    color: var(--text-secondary);
 }
 
 .icon3d {

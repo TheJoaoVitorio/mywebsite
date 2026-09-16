@@ -4,21 +4,22 @@
   padding: 40px 20px;
   box-sizing: border-box;
   background:
-    radial-gradient(circle at top, rgba(88, 166, 255, 0.14), transparent 28%),
-    linear-gradient(180deg, #0b0d10 0%, #060708 100%);
+    radial-gradient(circle at top, var(--accent-subtle), transparent 35%),
+    var(--bg-page);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: background 0.3s ease;
 }
 
 .backBtn {
   align-self: flex-start;
   width: auto;
   margin: 0 0 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #8b949e;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
   padding: 10px 18px;
   border-radius: 20px;
   cursor: pointer;
@@ -26,41 +27,46 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
 
 .backBtn:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.09);
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
 }
 
 .calculatorWrapper {
   width: 100%;
   max-width: 600px;
-  background: rgba(14, 17, 22, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 40px;
   padding: 40px;
   box-sizing: border-box;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--card-shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .titleSection {
-  border-left: 4px solid #58a6ff;
+  border-left: 4px solid var(--accent-primary);
   padding-left: 16px;
   margin-bottom: 32px;
+  transition: border-color 0.3s ease;
 }
 
 .titleSection h1 {
   margin: 0 0 8px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 2rem;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .titleSection p {
   margin: 0;
-  color: #8b949e;
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
@@ -79,12 +85,12 @@
 .inputGroup label {
   font-size: 0.92rem;
   font-weight: 500;
-  color: #c9d1d9;
+  color: var(--text-secondary);
 }
 
 .inputGroup label span {
   margin-left: 8px;
-  color: #8b949e;
+  color: var(--text-muted);
   font-size: 0.8rem;
   font-weight: 400;
 }
@@ -98,22 +104,22 @@
 .prefix {
   position: absolute;
   left: 16px;
-  color: #8b949e;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .suffix {
   position: absolute;
   right: 16px;
-  color: #8b949e;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .formInput {
   width: 100%;
-  background: #161b22;
-  border: 1px solid #30363d;
-  color: #fff;
+  background: var(--bg-input);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
   border-radius: 16px;
   padding: 14px 16px;
   font-size: 1rem;
@@ -124,12 +130,12 @@
 }
 
 .formInput:hover {
-  border-color: rgba(88, 166, 255, 0.5);
+  border-color: var(--accent-primary);
 }
 
 .formInput:focus {
-  border-color: #58a6ff;
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .hasPrefix {
@@ -150,7 +156,7 @@
 .linkButton {
   background: none;
   border: none;
-  color: #58a6ff;
+  color: var(--accent-primary);
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
@@ -163,8 +169,8 @@
 
 .hourlyCalculatorBox {
   margin-top: 8px;
-  background: rgba(88, 166, 255, 0.05);
-  border: 1px solid rgba(88, 166, 255, 0.2);
+  background: var(--accent-subtle);
+  border: 1px solid var(--border-subtle);
   border-radius: 20px;
   padding: 20px;
   display: flex;
@@ -174,7 +180,7 @@
 
 .hourlyCalculatorBox h4 {
   margin: 0;
-  color: #58a6ff;
+  color: var(--accent-primary);
   font-size: 1rem;
 }
 
@@ -193,7 +199,7 @@
 
 .calcGroup label {
   font-size: 0.8rem;
-  color: #8b949e;
+  color: var(--text-muted);
 }
 
 .calcGroup .formInput {
@@ -210,9 +216,9 @@
 }
 
 .applyBtn {
-  background: rgba(88, 166, 255, 0.1);
-  color: #58a6ff;
-  border: 1px solid rgba(88, 166, 255, 0.3);
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
   border-radius: 12px;
   padding: 10px;
   font-weight: 600;
@@ -222,8 +228,8 @@
 }
 
 .applyBtn:hover {
-  background: #58a6ff;
-  color: #fff;
+  background: var(--accent-primary);
+  color: var(--accent-contrast);
 }
 
 .sliderContainer {
@@ -243,7 +249,7 @@
   width: 100%;
   height: 6px;
   border-radius: 4px;
-  background: #30363d;
+  background: var(--border-primary);
   outline: none;
 }
 
@@ -253,30 +259,30 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #58a6ff;
+  background: var(--accent-primary);
   cursor: pointer;
 }
 
 .sliderValue {
-  background: #161b22;
+  background: var(--bg-surface-secondary);
   padding: 8px 16px;
   border-radius: 12px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-primary);
   font-weight: 600;
-  color: #58a6ff;
+  color: var(--accent-primary);
   min-width: 60px;
   text-align: center;
 }
 
 .recommendationTag {
   display: inline-block;
-  background: rgba(88, 166, 255, 0.1);
-  color: #58a6ff;
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 500;
-  border: 1px solid rgba(88, 166, 255, 0.2);
+  border: 1px solid var(--border-subtle);
 }
 
 .calculationHelp {
@@ -284,7 +290,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #8b949e;
+  color: var(--text-muted);
   font-size: 0.84rem;
 }
 
@@ -301,10 +307,10 @@
 .infoButton {
   width: 28px;
   height: 28px;
-  border: 1px solid rgba(88, 166, 255, 0.35);
+  border: 1px solid var(--accent-primary);
   border-radius: 999px;
-  background: rgba(88, 166, 255, 0.1);
-  color: #58a6ff;
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
@@ -321,10 +327,10 @@
   width: min(320px, calc(100vw - 64px));
   padding: 14px 16px;
   border-radius: 16px;
-  border: 1px solid rgba(88, 166, 255, 0.22);
-  background: #11161d;
-  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
-  color: #d7dee7;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-surface);
+  box-shadow: var(--card-shadow);
+  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -335,7 +341,7 @@
 }
 
 .tooltipContent strong {
-  color: #58a6ff;
+  color: var(--accent-primary);
   font-size: 0.88rem;
 }
 
@@ -353,7 +359,7 @@
 .resultsSection {
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid #21262d;
+  border-top: 1px solid var(--border-primary);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -364,25 +370,25 @@
   justify-content: space-between;
   align-items: center;
   font-size: 1rem;
-  color: #8b949e;
+  color: var(--text-muted);
 }
 
 .resultValue {
-  color: #c9d1d9;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .total {
   margin-top: 8px;
   padding-top: 16px;
-  border-top: 1px dashed #30363d;
-  color: #fff;
+  border-top: 1px dashed var(--border-primary);
+  color: var(--text-primary);
   font-size: 1.4rem;
   font-weight: 600;
 }
 
 .total .resultValue {
-  color: #58a6ff;
+  color: var(--accent-primary);
 }
 
 @media (max-width: 768px) {

@@ -28,7 +28,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: '#fff' }}>Carregando projetos...</div>;
+    return <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando projetos...</div>;
   }
 
   const featuredProject = projects.length > 0 ? projects[0] : null;
@@ -78,12 +78,12 @@ function App() {
                 </div>
               </div>
             ) : (
-              <div style={{ padding: '20px', color: '#8b949e' }}>
+              <div style={{ padding: '20px', color: 'var(--text-muted)' }}>
                 <p>Nenhum projeto encontrado. Adicione projetos no Firebase.</p>
               </div>
             )}
 
-            <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '20px', marginTop: '40px' }}>Explore Mais</h3>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '20px', marginTop: '40px' }}>Explore Mais</h3>
 
             <div className={styles.projectsGrid}>
               {otherProjects.map(project => (
