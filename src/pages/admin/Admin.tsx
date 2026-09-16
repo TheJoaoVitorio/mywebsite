@@ -5,7 +5,7 @@ import { auth } from '../../services/firebaseConfig';
 import { getProjects, addProject, updateProject, deleteProject, type Project } from '../../services/projectsService';
 import { getTools, addTool, updateTool, deleteTool, type ToolItem } from '../../services/toolsService';
 import styles from './admin.module.css';
-import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode } from 'react-icons/fi';
+import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode, FiEye, FiX } from 'react-icons/fi';
 import ImageModal from '../../components/image-modal/ImageModal';
 import { uploadToCloudinary } from '../../services/cloudinaryService';
 
@@ -64,10 +64,15 @@ export default function Admin() {
         description: '',
         imageUrl: '',
         link: '',
-        tags: '',
-        details: '',
-        photos: ''
+        tags: [] as string[],
+        details: [] as string[],
+        photos: [] as string[]
     });
+
+    // Tag and Feature input state
+    const [tagInput, setTagInput] = useState('');
+    const [featureInput, setFeatureInput] = useState('');
+    const [galleryUrlInput, setGalleryUrlInput] = useState('');
 
     // Tools Form State
     const [editingToolId, setEditingToolId] = useState<string | null>(null);
@@ -97,21 +102,65 @@ export default function Admin() {
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery') => {
         if (!e.target.files || e.target.files.length === 0) return;
-        const file = e.target.files[0];
         setUploading(true);
         try {
-            const secureUrl = await uploadToCloudinary(file);
             if (type === 'cover') {
+                const file = e.target.files[0];
+                const secureUrl = await uploadToCloudinary(file);
                 setProjectForm(prev => ({ ...prev, imageUrl: secureUrl }));
             } else {
-                setProjectForm(prev => ({ ...prev, photos: prev.photos ? `${prev.photos}\n${secureUrl}` : secureUrl }));
+                const files = Array.from(e.target.files);
+                const urls: string[] = [];
+                for (const file of files) {
+                    const secureUrl = await uploadToCloudinary(file);
+                    urls.push(secureUrl);
+                }
+                setProjectForm(prev => ({ ...prev, photos: [...prev.photos, ...urls] }));
             }
         } catch (error) {
             console.error(error);
             alert("Erro ao fazer upload da imagem. Verifique suas credenciais.");
         } finally {
             setUploading(false);
+            e.target.value = '';
         }
+    };
+
+    const handleRemovePhoto = (indexToRemove: number) => {
+        setProjectForm(prev => ({
+            ...prev,
+            photos: prev.photos.filter((_, i) => i !== indexToRemove)
+        }));
+    };
+
+    const handleAddTag = (val: string) => {
+        const cleaned = val.trim().replace(/,/g, '');
+        if (cleaned && !projectForm.tags.includes(cleaned)) {
+            setProjectForm(prev => ({ ...prev, tags: [...prev.tags, cleaned] }));
+        }
+        setTagInput('');
+    };
+
+    const handleRemoveTag = (indexToRemove: number) => {
+        setProjectForm(prev => ({
+            ...prev,
+            tags: prev.tags.filter((_, i) => i !== indexToRemove)
+        }));
+    };
+
+    const handleAddFeature = (val: string) => {
+        const cleaned = val.trim();
+        if (cleaned) {
+            setProjectForm(prev => ({ ...prev, details: [...prev.details, cleaned] }));
+        }
+        setFeatureInput('');
+    };
+
+    const handleRemoveFeature = (indexToRemove: number) => {
+        setProjectForm(prev => ({
+            ...prev,
+            details: prev.details.filter((_, i) => i !== indexToRemove)
+        }));
     };
 
     const openModal = (url: string) => {
@@ -132,7 +181,10 @@ export default function Admin() {
     // --- Projects Handlers ---
     const handleNewProject = () => {
         setEditingProjectId(null);
-        setProjectForm({ title: '', description: '', imageUrl: '', link: '', tags: '', details: '', photos: '' });
+        setProjectForm({ title: '', description: '', imageUrl: '', link: '', tags: [], details: [], photos: [] });
+        setTagInput('');
+        setFeatureInput('');
+        setGalleryUrlInput('');
         setView('edit');
     };
 
@@ -143,24 +195,45 @@ export default function Admin() {
             description: project.description,
             imageUrl: project.imageUrl,
             link: project.link || '',
-            tags: project.tags.join(', '),
-            details: project.details.join('\n'),
-            photos: project.photos.join('\n')
+            tags: Array.isArray(project.tags) ? project.tags : [],
+            details: Array.isArray(project.details) ? project.details : [],
+            photos: Array.isArray(project.photos) ? project.photos : []
         });
+        setTagInput('');
+        setFeatureInput('');
+        setGalleryUrlInput('');
         setView('edit');
     };
 
     const handleSaveProject = async () => {
         setLoading(true);
         try {
+            const finalTags = [...projectForm.tags];
+            if (tagInput.trim()) {
+                const cleaned = tagInput.trim().replace(/,/g, '');
+                if (cleaned && !finalTags.includes(cleaned)) {
+                    finalTags.push(cleaned);
+                }
+            }
+
+            const finalDetails = [...projectForm.details];
+            if (featureInput.trim()) {
+                finalDetails.push(featureInput.trim());
+            }
+
+            const finalPhotos = [...projectForm.photos];
+            if (galleryUrlInput.trim() && !finalPhotos.includes(galleryUrlInput.trim())) {
+                finalPhotos.push(galleryUrlInput.trim());
+            }
+
             const projectData = {
                 title: projectForm.title,
                 description: projectForm.description,
                 imageUrl: projectForm.imageUrl,
                 link: projectForm.link,
-                tags: projectForm.tags.split(',').map(s => s.trim()).filter(Boolean),
-                details: projectForm.details.split('\n').filter(Boolean),
-                photos: projectForm.photos.split('\n').filter(Boolean)
+                tags: finalTags,
+                details: finalDetails,
+                photos: finalPhotos
             };
             if (editingProjectId) await updateProject(editingProjectId, projectData);
             else await addProject(projectData);
@@ -251,11 +324,21 @@ export default function Admin() {
 
     return (
         <div className={styles.container}>
+            {/* Atmospheric dark blue glows from design system */}
+            <div className={styles.ambientGlowTop} />
+            <div className={styles.ambientGlowBottom} />
+            <div className={styles.subtleVignette} />
+
             {/* Sidebar */}
             <aside className={styles.sidebar}>
                 <div className={styles.brand}>
-                    <div className={styles.brandIcon}></div>
-                    <span>Admin Panel</span>
+                    <div className={styles.brandBadge}>
+                        <img src="/jv-logo.png" alt="JV Logo" className={styles.brandLogo} />
+                    </div>
+                    <div className={styles.brandInfo}>
+                        <span className={styles.brandName}>JVDev</span>
+                        <span className={styles.brandRole}>Admin Area</span>
+                    </div>
                 </div>
 
                 <nav className={styles.nav}>
@@ -354,41 +437,255 @@ export default function Admin() {
                         </div>
 
                         <div className={styles.formSection}>
-                            <div className={styles.sectionHeader}><div className={styles.sectionNumber}>2</div><div className={styles.sectionTitle}>Visuals & Media</div></div>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>2</div>
+                                <div className={styles.sectionTitle}>Visuals & Media</div>
+                            </div>
                             <div className={styles.sectionContent}>
+                                {/* Cover Image */}
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.label}>Cover Image URL</label>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        <input className={styles.input} value={projectForm.imageUrl} onChange={e => setProjectForm({ ...projectForm, imageUrl: e.target.value })} style={{ flex: 1 }} />
-                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                    <label className={styles.label}>Cover Image</label>
+                                    <div className={styles.urlInputRow}>
+                                        <input
+                                            className={styles.input}
+                                            placeholder="Paste image URL or upload to Cloudinary..."
+                                            value={projectForm.imageUrl}
+                                            onChange={e => setProjectForm({ ...projectForm, imageUrl: e.target.value })}
+                                        />
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <FiUpload />
+                                            <span>{uploading ? 'Uploading...' : 'Upload Cover'}</span>
                                             <input type="file" hidden accept="image/*" onChange={(e) => handleImageUpload(e, 'cover')} disabled={uploading} />
                                         </label>
                                     </div>
+
+                                    {/* Cover Preview */}
+                                    {projectForm.imageUrl && (
+                                        <div className={styles.coverPreviewCard}>
+                                            <img
+                                                src={projectForm.imageUrl}
+                                                alt="Cover preview"
+                                                className={styles.coverPreviewImage}
+                                                onClick={() => openModal(projectForm.imageUrl)}
+                                            />
+                                            <div className={styles.previewOverlay}>
+                                                <button
+                                                    type="button"
+                                                    title="View full image"
+                                                    className={styles.previewIconBtn}
+                                                    onClick={() => openModal(projectForm.imageUrl)}
+                                                >
+                                                    <FiEye size={16} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    title="Remove cover"
+                                                    className={`${styles.previewIconBtn} ${styles.previewIconBtnDanger}`}
+                                                    onClick={() => setProjectForm({ ...projectForm, imageUrl: '' })}
+                                                >
+                                                    <FiTrash2 size={16} />
+                                                </button>
+                                            </div>
+                                            <span className={styles.previewBadge}>Cover Image</span>
+                                        </div>
+                                    )}
                                 </div>
+
+                                {/* Gallery Images */}
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.label}>Gallery Images (One URL per line)</label>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        <textarea className={styles.textarea} style={{ flex: 1 }} value={projectForm.photos} onChange={e => setProjectForm({ ...projectForm, photos: e.target.value })} />
-                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                        <label className={styles.label} style={{ margin: 0 }}>
+                                            Gallery Images {projectForm.photos.length > 0 && <span className={styles.counterBadge}>({projectForm.photos.length})</span>}
+                                        </label>
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', fontSize: '0.8rem' }}>
                                             <FiUpload />
-                                            <input type="file" hidden accept="image/*" onChange={(e) => handleImageUpload(e, 'gallery')} disabled={uploading} />
+                                            <span>{uploading ? 'Uploading...' : 'Upload Photos'}</span>
+                                            <input type="file" hidden multiple accept="image/*" onChange={(e) => handleImageUpload(e, 'gallery')} disabled={uploading} />
                                         </label>
                                     </div>
+
+                                    {/* Quick URL Adder for Gallery */}
+                                    <div className={styles.urlInputRow} style={{ marginBottom: '14px' }}>
+                                        <input
+                                            className={styles.input}
+                                            placeholder="Or paste an image URL and click Add..."
+                                            value={galleryUrlInput}
+                                            onChange={e => setGalleryUrlInput(e.target.value)}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    if (galleryUrlInput.trim()) {
+                                                        setProjectForm(prev => ({ ...prev, photos: [...prev.photos, galleryUrlInput.trim()] }));
+                                                        setGalleryUrlInput('');
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className={styles.secondaryButton}
+                                            onClick={() => {
+                                                if (galleryUrlInput.trim()) {
+                                                    setProjectForm(prev => ({ ...prev, photos: [...prev.photos, galleryUrlInput.trim()] }));
+                                                    setGalleryUrlInput('');
+                                                }
+                                            }}
+                                        >
+                                            <FiPlus /> Add
+                                        </button>
+                                    </div>
+
+                                    {/* Gallery Preview Grid */}
+                                    {projectForm.photos.length > 0 ? (
+                                        <div className={styles.galleryPreviewGrid}>
+                                            {projectForm.photos.map((photoUrl, idx) => (
+                                                <div key={idx} className={styles.galleryPreviewItem}>
+                                                    <img
+                                                        src={photoUrl}
+                                                        alt={`Gallery ${idx + 1}`}
+                                                        className={styles.galleryPreviewImage}
+                                                        onClick={() => openModal(photoUrl)}
+                                                    />
+                                                    <div className={styles.previewOverlay}>
+                                                        <button
+                                                            type="button"
+                                                            title="View full image"
+                                                            className={styles.previewIconBtn}
+                                                            onClick={() => openModal(photoUrl)}
+                                                        >
+                                                            <FiEye size={15} />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            title="Delete photo"
+                                                            className={`${styles.previewIconBtn} ${styles.previewIconBtnDanger}`}
+                                                            onClick={() => handleRemovePhoto(idx)}
+                                                        >
+                                                            <FiTrash2 size={15} />
+                                                        </button>
+                                                    </div>
+                                                    <span className={styles.previewIndexBadge}>{idx + 1}</span>
+                                                </div>
+                                            ))}
+                                            {uploading && (
+                                                <div className={styles.galleryUploadingItem}>
+                                                    <div className={styles.loadingSpinner} />
+                                                    <span>Uploading...</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className={styles.emptyGalleryBox}>
+                                            {uploading ? (
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div className={styles.loadingSpinner} />
+                                                    <span>Uploading to Cloudinary...</span>
+                                                </div>
+                                            ) : (
+                                                <span>No gallery images yet. Click "Upload Photos" or paste a URL above.</span>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         <div className={styles.formSection}>
-                            <div className={styles.sectionHeader}><div className={styles.sectionNumber}>3</div><div className={styles.sectionTitle}>Configuration</div></div>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>3</div>
+                                <div className={styles.sectionTitle}>Configuration</div>
+                            </div>
                             <div className={styles.sectionContent}>
+                                {/* Tags as interactive chips */}
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.label}>Tags (Comma separated)</label>
-                                    <input className={styles.input} value={projectForm.tags} onChange={e => setProjectForm({ ...projectForm, tags: e.target.value })} />
+                                    <label className={styles.label}>
+                                        Tags {projectForm.tags.length > 0 && <span className={styles.counterBadge}>({projectForm.tags.length})</span>}
+                                    </label>
+                                    <div className={styles.tagsContainer}>
+                                        {projectForm.tags.map((tag, idx) => (
+                                            <span key={idx} className={styles.tagBadge}>
+                                                {tag}
+                                                <button
+                                                    type="button"
+                                                    className={styles.tagCloseBtn}
+                                                    onClick={() => handleRemoveTag(idx)}
+                                                    title={`Remove ${tag}`}
+                                                >
+                                                    <FiX size={13} />
+                                                </button>
+                                            </span>
+                                        ))}
+                                        <input
+                                            className={styles.tagInput}
+                                            placeholder={projectForm.tags.length === 0 ? "Type tag & press Enter or comma..." : "Add another tag..."}
+                                            value={tagInput}
+                                            onChange={e => {
+                                                const val = e.target.value;
+                                                if (val.includes(',')) {
+                                                    handleAddTag(val);
+                                                } else {
+                                                    setTagInput(val);
+                                                }
+                                            }}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter' || e.key === ',') {
+                                                    e.preventDefault();
+                                                    handleAddTag(tagInput);
+                                                } else if (e.key === 'Backspace' && !tagInput && projectForm.tags.length > 0) {
+                                                    handleRemoveTag(projectForm.tags.length - 1);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <span className={styles.inputHint}>Press <kbd>Enter</kbd> or type <kbd>,</kbd> to convert text into a tag.</span>
                                 </div>
+
+                                {/* Features List as interactive list/chips */}
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.label}>Features List (One per line)</label>
-                                    <textarea className={styles.textarea} value={projectForm.details} onChange={e => setProjectForm({ ...projectForm, details: e.target.value })} />
+                                    <label className={styles.label}>
+                                        Features List {projectForm.details.length > 0 && <span className={styles.counterBadge}>({projectForm.details.length})</span>}
+                                    </label>
+                                    <div className={styles.urlInputRow} style={{ marginBottom: projectForm.details.length > 0 ? '12px' : '6px' }}>
+                                        <input
+                                            className={styles.input}
+                                            placeholder="Add a key feature or highlight and press Enter..."
+                                            value={featureInput}
+                                            onChange={e => setFeatureInput(e.target.value)}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleAddFeature(featureInput);
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className={styles.secondaryButton}
+                                            onClick={() => handleAddFeature(featureInput)}
+                                        >
+                                            <FiPlus /> Add
+                                        </button>
+                                    </div>
+
+                                    {projectForm.details.length > 0 && (
+                                        <div className={styles.featuresList}>
+                                            {projectForm.details.map((feat, idx) => (
+                                                <div key={idx} className={styles.featureItem}>
+                                                    <span className={styles.featureBullet}>✦</span>
+                                                    <span className={styles.featureText}>{feat}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.featureRemoveBtn}
+                                                        onClick={() => handleRemoveFeature(idx)}
+                                                        title="Remove feature"
+                                                    >
+                                                        <FiX size={14} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <span className={styles.inputHint}>Press <kbd>Enter</kbd> to add to the features list.</span>
                                 </div>
                             </div>
                         </div>

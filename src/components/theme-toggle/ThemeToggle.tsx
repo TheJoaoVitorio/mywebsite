@@ -1,10 +1,18 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { FiMoon, FiCoffee } from 'react-icons/fi';
 import { useTheme } from '../../context/ThemeContext';
 import styles from './themeToggle.module.css';
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+
+  // Ocultar nas rotas de login e admin
+  const isExcluded = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  if (isExcluded) {
+    return null;
+  }
 
   const isDark = theme === 'dark';
 

@@ -18,9 +18,9 @@ const Files = lazy(() => import('./pages/files/Files.tsx'));
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
-      <ThemeToggle />
       <BrowserRouter>
-      <Routes>
+        <ThemeToggle />
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/files"
