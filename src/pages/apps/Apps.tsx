@@ -109,7 +109,7 @@ export default function Apps() {
                     )}
 
                     <div className={styles.storeBadge}>
-                        <FiSmartphone size={14} color="#2997ff" />
+                        <FiSmartphone size={14} style={{ color: 'var(--accent-primary)' }} />
                         <span>App Store</span>
                     </div>
                 </div>
@@ -138,7 +138,7 @@ export default function Apps() {
                                         className={styles.detailAppIcon}
                                     />
                                 ) : (
-                                    <FiSmartphone size={48} color="#2997ff" />
+                                    <FiSmartphone size={48} style={{ color: 'var(--accent-primary)' }} />
                                 )}
                             </div>
 
@@ -319,7 +319,7 @@ export default function Apps() {
                             ))
                         ) : (
                             <div className={styles.emptyState}>
-                                <p style={{ margin: '0 0 10px 0', fontSize: 18, color: '#fff', fontWeight: 600 }}>Nenhum aplicativo cadastrado</p>
+                                <p style={{ margin: '0 0 10px 0', fontSize: 18, color: 'var(--text-primary)', fontWeight: 600 }}>Nenhum aplicativo cadastrado</p>
                                 <p style={{ margin: 0 }}>Acesse o painel de administração em <strong>/admin</strong> para cadastrar seus aplicativos e softwares.</p>
                             </div>
                         )}

@@ -1,11 +1,11 @@
-/* ── Apple App Store Theme & Layout ──────────────────────── */
+/* ── Apple App Store Theme & Layout (Adapted for Dark & Light Coffee) ── */
 
 .container {
     width: 100vw;
     min-height: 100vh;
-    background-color: #000000;
-    color: #ffffff;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Google Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-page, #000000);
+    color: var(--text-primary, #ffffff);
+    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     padding: 40px 32px 80px 32px;
     box-sizing: border-box;
     display: flex;
@@ -13,6 +13,7 @@
     align-items: center;
     position: relative;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .contentWrapper {
@@ -35,14 +36,14 @@
 .backBtn {
     background: transparent;
     border: none;
-    color: #2997ff;
+    color: var(--accent-primary, #2997ff);
     cursor: pointer;
     font-size: 16px;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease, color 0.3s ease;
     padding: 6px 0;
     font-family: inherit;
 }
@@ -56,13 +57,14 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-surface-secondary, rgba(255, 255, 255, 0.06));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
     padding: 6px 14px;
     border-radius: 9999px;
     font-size: 13px;
     font-weight: 500;
-    color: #a1a1a6;
+    color: var(--text-secondary, #a1a1a6);
+    transition: all 0.3s ease;
 }
 
 /* ── Category Section Header (Image 1) ─────────────────── */
@@ -74,24 +76,25 @@
 .categoryTitle {
     font-size: 22px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary, #ffffff);
     margin: 0 0 20px 0;
     display: flex;
     align-items: center;
     gap: 6px;
     letter-spacing: -0.3px;
+    transition: color 0.3s ease;
 }
 
 .chevron {
-    color: #8e8e93;
+    color: var(--text-muted, #8e8e93);
     font-weight: 400;
     font-size: 20px;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .categoryTitle:hover .chevron {
     transform: translateX(3px);
-    color: #2997ff;
+    color: var(--accent-primary, #2997ff);
 }
 
 /* ── Apps Grid (Image 1) ────────────────────────────────── */
@@ -128,16 +131,17 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 8px 10px;
+    padding: 10px 12px;
     border-radius: 16px;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.15s ease;
     cursor: pointer;
     user-select: none;
     min-width: 0;
 }
 
 .appRowItem:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-hover, rgba(255, 255, 255, 0.05));
+    transform: translateY(-1px);
 }
 
 .appRowIcon {
@@ -146,23 +150,25 @@
     border-radius: 14px;
     object-fit: cover;
     flex-shrink: 0;
-    background: #1c1c1e;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-surface-secondary, #1c1c1e);
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.25));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    transition: all 0.3s ease;
 }
 
 .appRowFallbackIcon {
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
+    background: var(--bg-surface-secondary, linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%));
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2997ff;
+    color: var(--accent-primary, #2997ff);
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.25));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    transition: all 0.3s ease;
 }
 
 .appRowInfo {
@@ -177,26 +183,28 @@
 .appRowName {
     font-size: 15px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary, #ffffff);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     letter-spacing: -0.2px;
+    transition: color 0.3s ease;
 }
 
 .appRowSubtitle {
     font-size: 12.5px;
-    color: #8e8e93;
+    color: var(--text-muted, #8e8e93);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: color 0.3s ease;
 }
 
 .visualizarBtn {
-    background: rgba(41, 151, 255, 0.18);
-    color: #2997ff;
+    background: var(--accent-subtle, rgba(41, 151, 255, 0.18));
+    color: var(--accent-primary, #2997ff);
     border: none;
     border-radius: 9999px;
     padding: 6px 16px;
@@ -209,8 +217,26 @@
     outline: none;
 }
 
-.visualizarBtn:hover {
+:global([data-theme='dark']) .visualizarBtn,
+:global(:root:not([data-theme])) .visualizarBtn {
+    background: rgba(255, 255, 255, 0.12);
+    color: #2997ff;
+}
+
+:global([data-theme='dark']) .visualizarBtn:hover,
+:global(:root:not([data-theme])) .visualizarBtn:hover {
     background: #0071e3;
+    color: #ffffff;
+    transform: scale(1.04);
+}
+
+:global([data-theme='light-coffee']) .visualizarBtn {
+    background: rgba(163, 93, 46, 0.12);
+    color: #A35D2E;
+}
+
+:global([data-theme='light-coffee']) .visualizarBtn:hover {
+    background: #A35D2E;
     color: #ffffff;
     transform: scale(1.04);
 }
@@ -244,6 +270,13 @@
     display: flex;
     align-items: center;
     gap: 32px;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+:global([data-theme='light-coffee']) .detailHeroCard {
+    background: linear-gradient(135deg, #F0E6D8 0%, #E8D9C5 50%, #DCBE9F 100%);
+    border: 1px solid #DFD2C2;
+    box-shadow: 0 16px 40px rgba(78, 54, 39, 0.14);
 }
 
 .detailBannerBg {
@@ -263,22 +296,28 @@
     inset: 0;
     background: radial-gradient(circle at 20% 50%, rgba(0,0,0,0.2) 0%, rgba(10, 10, 12, 0.85) 100%);
     pointer-events: none;
+    transition: background 0.3s ease;
+}
+
+:global([data-theme='light-coffee']) .detailHeroOverlay {
+    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.3) 0%, rgba(235, 222, 204, 0.7) 100%);
 }
 
 .detailAppIconWrapper {
     width: 120px;
     height: 120px;
     border-radius: 26px;
-    background: #1c1c1e;
-    border: 2px solid rgba(255, 255, 255, 0.18);
+    background: var(--bg-surface-secondary, #1c1c1e);
+    border: 2px solid var(--border-primary, rgba(255, 255, 255, 0.18));
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--card-shadow, 0 12px 30px rgba(0, 0, 0, 0.6));
     position: relative;
     z-index: 2;
+    transition: all 0.3s ease;
 }
 
 .detailAppIcon {
@@ -300,23 +339,53 @@
 .detailTitle {
     font-size: clamp(26px, 4vw, 36px);
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary, #ffffff);
     margin: 0;
     letter-spacing: -0.6px;
     line-height: 1.15;
+    transition: color 0.3s ease;
+}
+
+:global([data-theme='dark']) .detailTitle,
+:global(:root:not([data-theme])) .detailTitle {
+    color: #ffffff;
 }
 
 .detailSubtitle {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--text-secondary, rgba(255, 255, 255, 0.85));
     margin: 0;
     line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+:global([data-theme='dark']) .detailSubtitle,
+:global(:root:not([data-theme])) .detailSubtitle {
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .detailMetaText {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--text-muted, rgba(255, 255, 255, 0.55));
     margin: 2px 0 14px 0;
+    transition: color 0.3s ease;
+}
+
+:global([data-theme='dark']) .detailMetaText,
+:global(:root:not([data-theme])) .detailMetaText {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+:global([data-theme='light-coffee']) .detailTitle {
+    color: #2D2118;
+}
+
+:global([data-theme='light-coffee']) .detailSubtitle {
+    color: #5C4638;
+}
+
+:global([data-theme='light-coffee']) .detailMetaText {
+    color: #8C7364;
 }
 
 .detailActionRow {
@@ -327,8 +396,8 @@
 }
 
 .primaryDownloadBtn {
-    background: #0071e3;
-    color: #ffffff;
+    background: var(--accent-primary, #0071e3);
+    color: var(--accent-contrast, #ffffff);
     border: none;
     border-radius: 9999px;
     padding: 10px 24px;
@@ -340,20 +409,32 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.4);
+    box-shadow: 0 4px 14px rgba(163, 93, 46, 0.25);
     transition: all 0.2s ease;
 }
 
+:global([data-theme='dark']) .primaryDownloadBtn,
+:global(:root:not([data-theme])) .primaryDownloadBtn {
+    background: #0071e3;
+    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.4);
+}
+
 .primaryDownloadBtn:hover {
-    background: #0077ed;
+    background: var(--accent-hover, #8A4B20);
     transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(163, 93, 46, 0.35);
+}
+
+:global([data-theme='dark']) .primaryDownloadBtn:hover,
+:global(:root:not([data-theme])) .primaryDownloadBtn:hover {
+    background: #0077ed;
     box-shadow: 0 6px 20px rgba(0, 113, 227, 0.6);
 }
 
 .shareBtn {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: var(--bg-surface, rgba(255, 255, 255, 0.12));
+    color: var(--text-primary, #ffffff);
+    border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.18));
     border-radius: 9999px;
     padding: 10px 18px;
     font-size: 14px;
@@ -366,8 +447,21 @@
     transition: all 0.2s ease;
 }
 
+:global([data-theme='light-coffee']) .shareBtn {
+    background: rgba(255, 255, 255, 0.7);
+    color: #2D2118;
+    border: 1px solid #DFD2C2;
+    box-shadow: 0 2px 8px rgba(78, 54, 39, 0.08);
+}
+
 .shareBtn:hover {
-    background: rgba(255, 255, 255, 0.20);
+    background: var(--bg-hover, rgba(255, 255, 255, 0.20));
+    border-color: var(--accent-primary);
+}
+
+:global([data-theme='light-coffee']) .shareBtn:hover {
+    background: #FFFFFF;
+    border-color: #A35D2E;
 }
 
 /* ── Stats / Metrics Bar (Image 2) ──────────────────────── */
@@ -378,10 +472,11 @@
     align-items: center;
     justify-content: space-between;
     padding: 18px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 36px;
+    border-top: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+    border-bottom: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+    margin-bottom: 32px;
     overflow-x: auto;
+    transition: border-color 0.3s ease;
 }
 
 .statColumn {
@@ -403,36 +498,40 @@
     top: 15%;
     height: 70%;
     width: 1px;
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--border-primary, rgba(255, 255, 255, 0.12));
+    transition: background-color 0.3s ease;
 }
 
 .statLabel {
     font-size: 11px;
     font-weight: 600;
-    color: #8e8e93;
+    color: var(--text-muted, #8e8e93);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 4px;
+    transition: color 0.3s ease;
 }
 
 .statMain {
     font-size: 19px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary, #ffffff);
     line-height: 1.2;
     display: flex;
     align-items: center;
     gap: 4px;
+    transition: color 0.3s ease;
 }
 
 .statSub {
     font-size: 11.5px;
-    color: #8e8e93;
+    color: var(--text-muted, #8e8e93);
     margin-top: 2px;
+    transition: color 0.3s ease;
 }
 
 .ageBadge {
-    background: #e50914;
+    background: #00A550;
     color: #ffffff;
     font-weight: 700;
     font-size: 12px;
@@ -447,18 +546,20 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    color: #8e8e93;
+    color: var(--text-secondary, #8e8e93);
     font-size: 13.5px;
     padding: 16px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
     margin-bottom: 28px;
+    transition: border-color 0.3s ease, color 0.3s ease;
 }
 
 .devicesIcons {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #2997ff;
+    color: var(--accent-primary, #2997ff);
+    transition: color 0.3s ease;
 }
 
 /* ── Description Section (Image 2) ──────────────────────── */
@@ -470,27 +571,30 @@
 .descriptionTitle {
     font-size: 18px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary, #ffffff);
     margin: 0 0 12px 0;
+    transition: color 0.3s ease;
 }
 
 .descriptionBody {
     font-size: 14.5px;
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--text-secondary, rgba(255, 255, 255, 0.82));
     white-space: pre-wrap;
     word-break: break-word;
+    transition: color 0.3s ease;
 }
 
 /* Empty State */
 .emptyState {
     text-align: center;
     padding: 60px 20px;
-    color: #8e8e93;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+    color: var(--text-muted, #8e8e93);
+    background: var(--bg-surface, rgba(255, 255, 255, 0.02));
+    border: 1px dashed var(--border-primary, rgba(255, 255, 255, 0.1));
     border-radius: 20px;
     font-size: 15px;
+    transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {
