@@ -11,6 +11,7 @@ const ProjectDetails = lazy(() => import('./pages/project-details/ProjectDetails
 const Login = lazy(() => import('./pages/login/Login'));
 const Admin = lazy(() => import('./pages/admin/Admin'));
 const Utils = lazy(() => import('./pages/utils/Utils'));
+const Apps = lazy(() => import('./pages/apps/Apps'));
 const CalculadoraServico = lazy(() => import('./pages/utils/tools/calculadora-servico/CalculadoraServico'));
 const Palavritas = lazy(() => import('./pages/palavritas/Palavritas.tsx'));
 const Files = lazy(() => import('./pages/files/Files.tsx'));
@@ -22,6 +23,14 @@ createRoot(document.getElementById('root')!).render(
         <ThemeToggle />
         <Routes>
         <Route path="/" element={<Home />} />
+        <Route
+          path="/apps"
+          element={
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando aplicativos...</div>}>
+              <Apps />
+            </Suspense>
+          }
+        />
         <Route
           path="/files"
           element={

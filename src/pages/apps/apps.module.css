@@ -1,0 +1,513 @@
+/* ── Apple App Store Theme & Layout ──────────────────────── */
+
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Google Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 40px 32px 80px 32px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.contentWrapper {
+    width: 100%;
+    max-width: 1240px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Top Navigation ─────────────────────────────────────── */
+
+.topNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    width: 100%;
+}
+
+.backBtn {
+    background: transparent;
+    border: none;
+    color: #2997ff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    padding: 6px 0;
+    font-family: inherit;
+}
+
+.backBtn:hover {
+    opacity: 0.8;
+    transform: translateX(-2px);
+}
+
+.storeBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #a1a1a6;
+}
+
+/* ── Category Section Header (Image 1) ─────────────────── */
+
+.categorySection {
+    margin-bottom: 48px;
+}
+
+.categoryTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: -0.3px;
+}
+
+.chevron {
+    color: #8e8e93;
+    font-weight: 400;
+    font-size: 20px;
+    transition: transform 0.2s ease;
+}
+
+.categoryTitle:hover .chevron {
+    transform: translateX(3px);
+    color: #2997ff;
+}
+
+/* ── Apps Grid (Image 1) ────────────────────────────────── */
+
+.appsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 24px;
+    width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .appsGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 860px) {
+    .appsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px 16px;
+    }
+}
+
+@media (max-width: 560px) {
+    .appsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Compact App Item Row (Image 1) ─────────────────────── */
+
+.appRowItem {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 10px;
+    border-radius: 16px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+    min-width: 0;
+}
+
+.appRowItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.appRowIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #1c1c1e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.appRowFallbackIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2997ff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.appRowInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+}
+
+.appRowName {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.2px;
+}
+
+.appRowSubtitle {
+    font-size: 12.5px;
+    color: #8e8e93;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.visualizarBtn {
+    background: rgba(41, 151, 255, 0.18);
+    color: #2997ff;
+    border: none;
+    border-radius: 9999px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    outline: none;
+}
+
+.visualizarBtn:hover {
+    background: #0071e3;
+    color: #ffffff;
+    transform: scale(1.04);
+}
+
+/* ── DETAIL VIEW (Image 2 - Product Page) ───────────────── */
+
+.detailContainer {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Detail Hero Card */
+.detailHeroCard {
+    width: 100%;
+    border-radius: 28px;
+    padding: 40px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2b0f16 0%, #17090d 50%, #0a0a0c 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.detailBannerBg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+    filter: blur(8px);
+    transform: scale(1.05);
+    pointer-events: none;
+}
+
+.detailHeroOverlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0,0,0,0.2) 0%, rgba(10, 10, 12, 0.85) 100%);
+    pointer-events: none;
+}
+
+.detailAppIconWrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 26px;
+    background: #1c1c1e;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    position: relative;
+    z-index: 2;
+}
+
+.detailAppIcon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detailHeroInfo {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detailTitle {
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.6px;
+    line-height: 1.15;
+}
+
+.detailSubtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.detailMetaText {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 2px 0 14px 0;
+}
+
+.detailActionRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.primaryDownloadBtn {
+    background: #0071e3;
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.4);
+    transition: all 0.2s ease;
+}
+
+.primaryDownloadBtn:hover {
+    background: #0077ed;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 113, 227, 0.6);
+}
+
+.shareBtn {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 9999px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.shareBtn:hover {
+    background: rgba(255, 255, 255, 0.20);
+}
+
+/* ── Stats / Metrics Bar (Image 2) ──────────────────────── */
+
+.statsBar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 36px;
+    overflow-x: auto;
+}
+
+.statColumn {
+    flex: 1;
+    min-width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding: 0 12px;
+}
+
+.statColumn:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 15%;
+    height: 70%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.statLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8e8e93;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.statMain {
+    font-size: 19px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.statSub {
+    font-size: 11.5px;
+    color: #8e8e93;
+    margin-top: 2px;
+}
+
+.ageBadge {
+    background: #e50914;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+/* ── Compatibility & Devices ────────────────────────────── */
+
+.compatibilityBar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #8e8e93;
+    font-size: 13.5px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 28px;
+}
+
+.devicesIcons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2997ff;
+}
+
+/* ── Description Section (Image 2) ──────────────────────── */
+
+.descriptionSection {
+    margin-bottom: 40px;
+}
+
+.descriptionTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 12px 0;
+}
+
+.descriptionBody {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: 60px 20px;
+    color: #8e8e93;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 24px 16px 60px 16px;
+    }
+
+    .detailHeroCard {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 20px;
+        gap: 20px;
+    }
+
+    .detailAppIconWrapper {
+        width: 88px;
+        height: 88px;
+        border-radius: 20px;
+    }
+}

@@ -4,8 +4,10 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebaseConfig';
 import { getProjects, addProject, updateProject, deleteProject, type Project } from '../../services/projectsService';
 import { getTools, addTool, updateTool, deleteTool, type ToolItem } from '../../services/toolsService';
+import { getApps, addApp, updateApp, deleteApp, type AppItem } from '../../services/appsService';
 import styles from './admin.module.css';
-import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode, FiEye, FiX } from 'react-icons/fi';
+import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode, FiEye, FiX, FiSmartphone, FiGlobe } from 'react-icons/fi';
+import { FaWindows, FaApple, FaAndroid } from 'react-icons/fa';
 import ImageModal from '../../components/image-modal/ImageModal';
 import { uploadToCloudinary } from '../../services/cloudinaryService';
 
@@ -41,12 +43,13 @@ export default function Admin() {
     const navigate = useNavigate();
 
     // Tab State
-    const [activeTab, setActiveTab] = useState<'projects' | 'tools'>('projects');
+    const [activeTab, setActiveTab] = useState<'projects' | 'tools' | 'apps'>('projects');
     const [view, setView] = useState<'list' | 'edit'>('list');
 
     // Data State
     const [projects, setProjects] = useState<Project[]>([]);
     const [tools, setTools] = useState<ToolItem[]>([]);
+    const [apps, setApps] = useState<AppItem[]>([]);
     const [refresh, setRefresh] = useState(0);
 
     // Global UI State
@@ -87,6 +90,23 @@ export default function Admin() {
         order: 0
     });
 
+    // Apps Form State
+    const [editingAppId, setEditingAppId] = useState<string | null>(null);
+    const [appForm, setAppForm] = useState({
+        name: '',
+        iconUrl: '',
+        description: '',
+        category: '',
+        bannerUrl: '',
+        fileSize: '',
+        downloadUrl: '',
+        version: '1.0.0',
+        developer: 'João Vitório',
+        platforms: ['Windows'] as string[],
+        screenshots: [] as string[],
+        order: 0
+    });
+
     useEffect(() => {
         async function fetchData() {
             if (activeTab === 'projects') {
@@ -95,12 +115,15 @@ export default function Admin() {
             } else if (activeTab === 'tools') {
                 const data = await getTools();
                 setTools(data);
+            } else if (activeTab === 'apps') {
+                const data = await getApps();
+                setApps(data);
             }
         }
         fetchData();
     }, [refresh, activeTab]);
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery') => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery' | 'appIcon' | 'appBanner' | 'appScreenshots') => {
         if (!e.target.files || e.target.files.length === 0) return;
         setUploading(true);
         try {
@@ -108,6 +131,22 @@ export default function Admin() {
                 const file = e.target.files[0];
                 const secureUrl = await uploadToCloudinary(file);
                 setProjectForm(prev => ({ ...prev, imageUrl: secureUrl }));
+            } else if (type === 'appIcon') {
+                const file = e.target.files[0];
+                const secureUrl = await uploadToCloudinary(file);
+                setAppForm(prev => ({ ...prev, iconUrl: secureUrl }));
+            } else if (type === 'appBanner') {
+                const file = e.target.files[0];
+                const secureUrl = await uploadToCloudinary(file);
+                setAppForm(prev => ({ ...prev, bannerUrl: secureUrl }));
+            } else if (type === 'appScreenshots') {
+                const files = Array.from(e.target.files);
+                const urls: string[] = [];
+                for (const file of files) {
+                    const secureUrl = await uploadToCloudinary(file);
+                    urls.push(secureUrl);
+                }
+                setAppForm(prev => ({ ...prev, screenshots: [...prev.screenshots, ...urls] }));
             } else {
                 const files = Array.from(e.target.files);
                 const urls: string[] = [];
@@ -322,6 +361,114 @@ export default function Admin() {
         }));
     };
 
+    // --- Apps Handlers ---
+    const handleNewApp = () => {
+        setEditingAppId(null);
+        setAppForm({
+            name: '',
+            iconUrl: '',
+            description: '',
+            category: '',
+            bannerUrl: '',
+            fileSize: '',
+            downloadUrl: '',
+            version: '1.0.0',
+            developer: 'João Vitório',
+            platforms: ['Windows'],
+            screenshots: [],
+            order: apps.length
+        });
+        setView('edit');
+    };
+
+    const handleEditApp = (app: AppItem) => {
+        setEditingAppId(app.id);
+        setAppForm({
+            name: app.name,
+            iconUrl: app.iconUrl,
+            description: app.description,
+            category: app.category,
+            bannerUrl: app.bannerUrl,
+            fileSize: app.fileSize,
+            downloadUrl: app.downloadUrl,
+            version: app.version || '1.0.0',
+            developer: app.developer || 'João Vitório',
+            platforms: Array.isArray(app.platforms) && app.platforms.length > 0 ? app.platforms : ['Windows'],
+            screenshots: Array.isArray(app.screenshots) ? app.screenshots : [],
+            order: app.order !== undefined ? app.order : 0
+        });
+        setView('edit');
+    };
+
+    const togglePlatform = (plat: string) => {
+        setAppForm(prev => {
+            const exists = prev.platforms.includes(plat);
+            if (exists) {
+                if (prev.platforms.length <= 1) return prev;
+                return { ...prev, platforms: prev.platforms.filter(p => p !== plat) };
+            } else {
+                return { ...prev, platforms: [...prev.platforms, plat] };
+            }
+        });
+    };
+
+    const handleRemoveAppScreenshot = (idxToRemove: number) => {
+        setAppForm(prev => ({
+            ...prev,
+            screenshots: prev.screenshots.filter((_, idx) => idx !== idxToRemove)
+        }));
+    };
+
+    const handleSaveApp = async () => {
+        if (!appForm.name.trim()) {
+            alert("O nome do aplicativo é obrigatório.");
+            return;
+        }
+        setLoading(true);
+        try {
+            const appData = {
+                name: appForm.name.trim(),
+                iconUrl: appForm.iconUrl.trim(),
+                description: appForm.description.trim(),
+                category: appForm.category.trim() || 'Geral',
+                bannerUrl: appForm.bannerUrl.trim(),
+                fileSize: appForm.fileSize.trim(),
+                downloadUrl: appForm.downloadUrl.trim(),
+                version: appForm.version.trim() || '1.0.0',
+                developer: appForm.developer.trim() || 'João Vitório',
+                platforms: appForm.platforms.length > 0 ? appForm.platforms : ['Windows'],
+                screenshots: appForm.screenshots || [],
+                order: Number(appForm.order) || 0
+            };
+            if (editingAppId) {
+                await updateApp(editingAppId, appData);
+            } else {
+                await addApp(appData);
+            }
+            setRefresh(prev => prev + 1);
+            setView('list');
+        } catch (error) {
+            console.error("Erro ao salvar aplicativo:", error);
+            alert("Erro ao salvar aplicativo.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteApp = async () => {
+        if (!editingAppId || !confirm("Tem certeza que deseja apagar este aplicativo?")) return;
+        setLoading(true);
+        try {
+            await deleteApp(editingAppId);
+            setRefresh(prev => prev + 1);
+            setView('list');
+        } catch (error) {
+            alert("Erro ao deletar");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className={styles.container}>
             {/* Atmospheric dark blue glows from design system */}
@@ -356,6 +503,12 @@ export default function Admin() {
                         onClick={() => { setActiveTab('tools'); setView('list'); }}
                     >
                         <FiLayers className={styles.navIcon} /> Tools (Bento)
+                    </div>
+                    <div
+                        className={`${styles.navItem} ${activeTab === 'apps' ? styles.navItemActive : ''}`}
+                        onClick={() => { setActiveTab('apps'); setView('list'); }}
+                    >
+                        <FiSmartphone className={styles.navIcon} /> Apps Store
                     </div>
                 </nav>
 
@@ -853,6 +1006,338 @@ export default function Admin() {
                                             dangerouslySetInnerHTML={{ __html: toolForm.html }}
                                         />
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* APPS SECTION */}
+                {view === 'list' && activeTab === 'apps' && (
+                    <>
+                        <header className={styles.pageHeader}>
+                            <div className={styles.pageTitle}>
+                                <h1>Apps Store</h1>
+                                <p>Gerencie e organize seus aplicativos, instaladores e links de download.</p>
+                            </div>
+                            <button className={styles.primaryButton} onClick={handleNewApp}>
+                                <FiPlus /> New App
+                            </button>
+                        </header>
+                        <div className={styles.appsAdminGrid}>
+                            {apps.map(app => (
+                                <div key={app.id} className={styles.appAdminCard} onClick={() => handleEditApp(app)}>
+                                    <div className={styles.appAdminIconWrapper}>
+                                        {app.iconUrl ? (
+                                            <img src={app.iconUrl} alt={app.name} className={styles.appAdminIcon} />
+                                        ) : (
+                                            <FiSmartphone size={28} color="#58a6ff" />
+                                        )}
+                                    </div>
+                                    <div className={styles.appAdminInfo}>
+                                        <div className={styles.appAdminHeaderRow}>
+                                            <h3 className={styles.appAdminTitle}>{app.name}</h3>
+                                            <span className={styles.appAdminCategory}>{app.category || 'Geral'}</span>
+                                        </div>
+                                        <p className={styles.appAdminDesc}>{app.description || 'Sem descrição cadastrada.'}</p>
+                                        <div className={styles.appAdminMeta}>
+                                            <span>{app.fileSize || 'Tamanho N/A'}</span>
+                                            {app.downloadUrl ? (
+                                                <span className={styles.downloadAvailableBadge}>● Link Ativo</span>
+                                            ) : (
+                                                <span className={styles.downloadMissingBadge}>● Sem Link</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {apps.length === 0 && (
+                                <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#8c93a0', padding: '60px 20px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed rgba(255,255,255,0.1)' }}>
+                                    <p style={{ margin: 0 }}>Nenhum aplicativo cadastrado ainda. Clique em "+ New App" para cadastrar seu primeiro aplicativo!</p>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+
+                {view === 'edit' && activeTab === 'apps' && (
+                    <div className={styles.formContainer}>
+                        <header className={styles.pageHeader} style={{ borderBottom: 'none', marginBottom: 20 }}>
+                            <div className={styles.pageTitle}>
+                                <button className={styles.secondaryButton} onClick={() => setView('list')} style={{ marginBottom: 16 }}>
+                                    <FiArrowLeft /> Voltar para Lista
+                                </button>
+                                <h1>{editingAppId ? 'Editar Aplicativo' : 'Cadastrar Novo Aplicativo'}</h1>
+                            </div>
+                            <div className={styles.actions} style={{ display: 'flex', gap: 12 }}>
+                                {editingAppId && (
+                                    <button className={styles.dangerButton} onClick={handleDeleteApp} disabled={loading}>
+                                        <FiTrash2 /> Excluir
+                                    </button>
+                                )}
+                                <button className={styles.primaryButton} onClick={handleSaveApp} disabled={loading}>
+                                    <FiSave /> {loading ? 'Salvando...' : 'Salvar Aplicativo'}
+                                </button>
+                            </div>
+                        </header>
+
+                        {/* SECTION 1: INFORMAÇÕES BÁSICAS */}
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>1</div>
+                                <div className={styles.sectionTitle}>Informações Básicas</div>
+                            </div>
+                            <div className={styles.sectionContent}>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Nome do Aplicativo</label>
+                                    <input
+                                        className={styles.input}
+                                        value={appForm.name}
+                                        onChange={e => setAppForm({ ...appForm, name: e.target.value })}
+                                        placeholder="Ex: Meu App Pro"
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Categoria</label>
+                                    <input
+                                        className={styles.input}
+                                        value={appForm.category}
+                                        onChange={e => setAppForm({ ...appForm, category: e.target.value })}
+                                        placeholder="Ex: Utilitários, Produtividade, Mobile, Jogos, Dev..."
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Plataformas Suportadas</label>
+                                    <div className={styles.platformsToggleGroup}>
+                                        {['Windows', 'macOS', 'Android', 'Web'].map(plat => {
+                                            const active = appForm.platforms.includes(plat);
+                                            return (
+                                                <button
+                                                    key={plat}
+                                                    type="button"
+                                                    className={`${styles.platformPill} ${active ? styles.platformPillActive : ''}`}
+                                                    onClick={() => togglePlatform(plat)}
+                                                >
+                                                    {plat === 'Windows' && <FaWindows size={14} />}
+                                                    {plat === 'macOS' && <FaApple size={15} />}
+                                                    {plat === 'Android' && <FaAndroid size={15} />}
+                                                    {plat === 'Web' && <FiGlobe size={14} />}
+                                                    <span>{plat}</span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <span className={styles.inputHint}>Selecione uma ou mais plataformas compatíveis (Windows, macOS, Android, Web).</span>
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Descrição Completa</label>
+                                    <textarea
+                                        className={styles.textarea}
+                                        value={appForm.description}
+                                        onChange={e => setAppForm({ ...appForm, description: e.target.value })}
+                                        placeholder="Descreva as funcionalidades do aplicativo, compatibilidade, requisitos e novidades..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SECTION 2: MÍDIA & VISUALS */}
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>2</div>
+                                <div className={styles.sectionTitle}>Mídia & Visuals</div>
+                            </div>
+                            <div className={styles.sectionContent}>
+                                {/* App Icon */}
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Ícone do App (Square / Squircle)</label>
+                                    <div className={styles.urlInputRow}>
+                                        <input
+                                            className={styles.input}
+                                            placeholder="Cole a URL do ícone ou faça upload no Cloudinary..."
+                                            value={appForm.iconUrl}
+                                            onChange={e => setAppForm({ ...appForm, iconUrl: e.target.value })}
+                                        />
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <FiUpload />
+                                            <span>{uploading ? 'Enviando...' : 'Upload Ícone'}</span>
+                                            <input type="file" hidden accept="image/*" onChange={(e) => handleImageUpload(e, 'appIcon')} disabled={uploading} />
+                                        </label>
+                                    </div>
+
+                                    {appForm.iconUrl && (
+                                        <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 14 }}>
+                                            <div style={{ width: 68, height: 68, borderRadius: 18, overflow: 'hidden', border: '1px solid rgba(45, 90, 185, 0.45)', background: '#080a0f', boxShadow: '0 4px 14px rgba(0,0,0,0.5)' }}>
+                                                <img src={appForm.iconUrl} alt="Icon Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }} onClick={() => openModal(appForm.iconUrl)} />
+                                            </div>
+                                            <div style={{ display: 'flex', gap: 8 }}>
+                                                <button type="button" className={styles.secondaryButton} onClick={() => openModal(appForm.iconUrl)}>
+                                                    <FiEye size={14} /> Ver
+                                                </button>
+                                                <button type="button" className={styles.dangerButton} onClick={() => setAppForm({ ...appForm, iconUrl: '' })}>
+                                                    <FiTrash2 size={14} /> Remover
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Banner Image */}
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Banner de Apresentação (Capa)</label>
+                                    <div className={styles.urlInputRow}>
+                                        <input
+                                            className={styles.input}
+                                            placeholder="Cole a URL do banner ou faça upload no Cloudinary..."
+                                            value={appForm.bannerUrl}
+                                            onChange={e => setAppForm({ ...appForm, bannerUrl: e.target.value })}
+                                        />
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <FiUpload />
+                                            <span>{uploading ? 'Enviando...' : 'Upload Banner'}</span>
+                                            <input type="file" hidden accept="image/*" onChange={(e) => handleImageUpload(e, 'appBanner')} disabled={uploading} />
+                                        </label>
+                                    </div>
+
+                                    {appForm.bannerUrl && (
+                                        <div className={styles.coverPreviewCard}>
+                                            <img
+                                                src={appForm.bannerUrl}
+                                                alt="Banner preview"
+                                                className={styles.coverPreviewImage}
+                                                onClick={() => openModal(appForm.bannerUrl)}
+                                            />
+                                            <div className={styles.previewOverlay}>
+                                                <button
+                                                    type="button"
+                                                    title="Visualizar em tela cheia"
+                                                    className={styles.previewIconBtn}
+                                                    onClick={() => openModal(appForm.bannerUrl)}
+                                                >
+                                                    <FiEye size={16} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    title="Remover banner"
+                                                    className={`${styles.previewIconBtn} ${styles.previewIconBtnDanger}`}
+                                                    onClick={() => setAppForm({ ...appForm, bannerUrl: '' })}
+                                                >
+                                                    <FiTrash2 size={16} />
+                                                </button>
+                                            </div>
+                                            <span className={styles.previewBadge}>Banner do App</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Screenshots Gallery */}
+                                <div className={styles.inputGroup}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                        <label className={styles.label} style={{ margin: 0 }}>
+                                            Capturas de Tela (Screenshots) {appForm.screenshots.length > 0 && <span className={styles.counterBadge}>({appForm.screenshots.length})</span>}
+                                        </label>
+                                        <label className={styles.secondaryButton} style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', fontSize: '0.8rem' }}>
+                                            <FiUpload />
+                                            <span>{uploading ? 'Enviando...' : 'Upload Screenshots'}</span>
+                                            <input type="file" hidden multiple accept="image/*" onChange={(e) => handleImageUpload(e, 'appScreenshots')} disabled={uploading} />
+                                        </label>
+                                    </div>
+
+                                    {appForm.screenshots.length > 0 ? (
+                                        <div className={styles.galleryPreviewGrid}>
+                                            {appForm.screenshots.map((shotUrl, idx) => (
+                                                <div key={idx} className={styles.galleryPreviewItem}>
+                                                    <img
+                                                        src={shotUrl}
+                                                        alt={`Screenshot ${idx + 1}`}
+                                                        className={styles.galleryPreviewImage}
+                                                        onClick={() => openModal(shotUrl)}
+                                                    />
+                                                    <div className={styles.previewOverlay}>
+                                                        <button
+                                                            type="button"
+                                                            title="Ver imagem"
+                                                            className={styles.previewIconBtn}
+                                                            onClick={() => openModal(shotUrl)}
+                                                        >
+                                                            <FiEye size={15} />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            title="Remover screenshot"
+                                                            className={`${styles.previewIconBtn} ${styles.previewIconBtnDanger}`}
+                                                            onClick={() => handleRemoveAppScreenshot(idx)}
+                                                        >
+                                                            <FiTrash2 size={15} />
+                                                        </button>
+                                                    </div>
+                                                    <span className={styles.previewIndexBadge}>{idx + 1}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className={styles.emptyGalleryBox}>
+                                            <span>Nenhuma captura de tela enviada ainda. Faça upload de screenshots para exibir na vitrine.</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SECTION 3: ARQUIVO & DOWNLOAD */}
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>3</div>
+                                <div className={styles.sectionTitle}>Arquivo & Download</div>
+                            </div>
+                            <div className={styles.sectionContent}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.label}>Tamanho do Arquivo</label>
+                                        <input
+                                            className={styles.input}
+                                            value={appForm.fileSize}
+                                            onChange={e => setAppForm({ ...appForm, fileSize: e.target.value })}
+                                            placeholder="Ex: 45 MB, 1.2 GB..."
+                                        />
+                                    </div>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.label}>Versão</label>
+                                        <input
+                                            className={styles.input}
+                                            value={appForm.version}
+                                            onChange={e => setAppForm({ ...appForm, version: e.target.value })}
+                                            placeholder="Ex: 1.0.0"
+                                        />
+                                    </div>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.label}>Desenvolvedor</label>
+                                        <input
+                                            className={styles.input}
+                                            value={appForm.developer}
+                                            onChange={e => setAppForm({ ...appForm, developer: e.target.value })}
+                                            placeholder="Ex: João Vitório"
+                                        />
+                                    </div>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.label}>Ordem de Exibição</label>
+                                        <input
+                                            className={styles.input}
+                                            type="number"
+                                            value={appForm.order}
+                                            onChange={e => setAppForm({ ...appForm, order: parseInt(e.target.value) || 0 })}
+                                            placeholder="0"
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Link para Download (MediaFire, Drive, etc.)</label>
+                                    <input
+                                        className={styles.input}
+                                        value={appForm.downloadUrl}
+                                        onChange={e => setAppForm({ ...appForm, downloadUrl: e.target.value })}
+                                        placeholder="https://www.mediafire.com/file/..."
+                                    />
                                 </div>
                             </div>
                         </div>

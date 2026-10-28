@@ -66,6 +66,12 @@ export default function ProfileCard({
             </div>
 
             <div className={styles.actionButton}>
+                <Link to="/apps">
+                    Apps
+                </Link>
+            </div>
+
+            <div className={styles.actionButton}>
                 <Link to="/utils">
                     Tools
                 </Link>
