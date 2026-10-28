@@ -58,7 +58,22 @@ export default function ProjectDetails() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedImage('');
+    };
+
+    const handleLike = async () => {
+        if (!id || hasLiked) return;
+
+        // Optimistic UI update
+        setHasLiked(true);
+        setProject(prev => prev ? ({ ...prev, likes: prev.likes + 1 }) : null);
+
+        // Update in Firebase
+        await incrementLikeCount(id);
+
+        // Save to localStorage
+        const likedProjects = JSON.parse(localStorage.getItem('likedProjects') || '{}');
+        likedProjects[id] = true;
+        localStorage.setItem('likedProjects', JSON.stringify(likedProjects));
     };
 
     const formatViews = (views: number) => {
@@ -66,22 +81,6 @@ export default function ProjectDetails() {
             return (views / 1000).toFixed(1) + 'k';
         }
         return views;
-    };
-
-    const handleLike = async () => {
-        if (!hasLiked && project && id) {
-            // Optimistic update
-            setProject(prev => prev ? ({ ...prev, likes: prev.likes + 1 }) : null);
-            setHasLiked(true);
-
-            // Persist to localStorage
-            const likedProjects = JSON.parse(localStorage.getItem('likedProjects') || '{}');
-            likedProjects[id] = true;
-            localStorage.setItem('likedProjects', JSON.stringify(likedProjects));
-
-            // Update Firebase
-            await incrementLikeCount(id);
-        }
     };
 
     if (isLoading) {
@@ -94,10 +93,10 @@ export default function ProjectDetails() {
 
     if (!project) {
         return (
-            <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', color: 'var(--text-primary)', display: 'flex', justifyContent: 'center', padding: '50px' }}>
-                <div>
+            <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
                     <h2>Projeto não encontrado</h2>
-                    <button onClick={() => navigate(-1)} className={styles.backButton} style={{ marginTop: '20px' }}>
+                    <button onClick={() => navigate(-1)} className={`${styles.backButton} animate-item stagger-1`} style={{ marginTop: '20px' }}>
                         <FiArrowLeft /> Voltar para Home
                     </button>
                 </div>
@@ -108,11 +107,11 @@ export default function ProjectDetails() {
     return (
         <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh' }}>
             <div className={styles.container}>
-                <button onClick={() => navigate(-1)} className={styles.backButton}>
+                <button onClick={() => navigate(-1)} className={`${styles.backButton} animate-item stagger-1`}>
                     <FiArrowLeft /> Voltar para Home
                 </button>
 
-                <header className={styles.header}>
+                <header className={`${styles.header} animate-item stagger-2`}>
                     <h1 className={styles.title}>{project.title}</h1>
                     <div className={styles.meta}>
                         <div className={styles.tags}>
@@ -139,11 +138,11 @@ export default function ProjectDetails() {
                     </div>
                 </header>
 
-                <div className={styles.heroImageContainer}>
+                <div className={`${styles.heroImageContainer} animate-item-scale stagger-3`}>
                     <img src={project.imageUrl} alt={project.title} className={styles.heroImage} />
                 </div>
 
-                <div className={styles.contentGrid}>
+                <div className={`${styles.contentGrid} animate-item stagger-4`}>
                     <section className={styles.descriptionSection}>
                         <h2>Sobre o Projeto</h2>
                         <p className={styles.description}>{project.description}</p>
@@ -173,7 +172,7 @@ export default function ProjectDetails() {
                     </aside>
                 </div>
 
-                <section className={styles.gallerySection}>
+                <section className={`${styles.gallerySection} animate-item stagger-5`}>
                     <h2>Galeria</h2>
                     <div className={styles.galleryGrid}>
                         {project.photos.map((photo, index) => (
@@ -188,13 +187,13 @@ export default function ProjectDetails() {
                         ))}
                     </div>
                 </section>
-
-                <ImageModal
-                    isOpen={isModalOpen}
-                    imageUrl={selectedImage}
-                    onClose={closeModal}
-                />
             </div>
+
+            <ImageModal
+                isOpen={isModalOpen}
+                imageUrl={selectedImage}
+                onClose={closeModal}
+            />
         </div>
     );
 }

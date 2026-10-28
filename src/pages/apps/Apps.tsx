@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     FiChevronLeft,
@@ -95,7 +95,7 @@ export default function Apps() {
         <div className={styles.container}>
             <div className={styles.contentWrapper}>
                 {/* ── TOP BAR ── */}
-                <div className={styles.topNav}>
+                <div className={`${styles.topNav} animate-item stagger-1`}>
                     {selectedApp ? (
                         <button className={styles.backBtn} onClick={handleBackToList}>
                             <FiChevronLeft size={22} />
@@ -120,7 +120,7 @@ export default function Apps() {
                 {selectedApp ? (
                     <div className={styles.detailContainer}>
                         {/* Hero Card */}
-                        <div className={styles.detailHeroCard}>
+                        <div className={`${styles.detailHeroCard} animate-item-scale stagger-1`}>
                             {selectedApp.bannerUrl && (
                                 <img
                                     src={selectedApp.bannerUrl}
@@ -182,7 +182,7 @@ export default function Apps() {
                         </div>
 
                         {/* Horizontal Metrics / Stats Bar (Image 2) */}
-                        <div className={styles.statsBar}>
+                        <div className={`${styles.statsBar} animate-item stagger-2`}>
                             <div className={styles.statColumn}>
                                 <span className={styles.statLabel}>Avaliações</span>
                                 <span className={styles.statMain}>5,0 ★</span>
@@ -225,7 +225,7 @@ export default function Apps() {
                         </div>
 
                         {/* Compatibility Bar with Platforms */}
-                        <div className={styles.compatibilityBar}>
+                        <div className={`${styles.compatibilityBar} animate-item stagger-3`}>
                             <div className={styles.devicesIcons}>
                                 {currentPlatforms.includes('Windows') && <FaWindows size={15} title="Windows" />}
                                 {currentPlatforms.includes('macOS') && <FaApple size={16} title="macOS" />}
@@ -236,7 +236,7 @@ export default function Apps() {
                         </div>
 
                         {/* Description Section */}
-                        <div className={styles.descriptionSection}>
+                        <div className={`${styles.descriptionSection} animate-item stagger-4`}>
                             <h2 className={styles.descriptionTitle}>Descrição</h2>
                             <p className={styles.descriptionBody}>
                                 {selectedApp.description || 'Nenhuma descrição detalhada informada.'}
@@ -245,7 +245,7 @@ export default function Apps() {
 
                         {/* Bottom CTA */}
                         {selectedApp.downloadUrl && (
-                            <div style={{ marginTop: 24, textAlign: 'center' }}>
+                            <div className="animate-item stagger-5" style={{ marginTop: 24, textAlign: 'center' }}>
                                 <a
                                     href={selectedApp.downloadUrl}
                                     target="_blank"
@@ -268,17 +268,18 @@ export default function Apps() {
                             <div className={styles.emptyState}>Carregando aplicativos da App Store...</div>
                         ) : Object.keys(groupedApps).length > 0 ? (
                             Object.entries(groupedApps).map(([category, categoryApps]) => (
-                                <section key={category} className={styles.categorySection}>
+                                <section key={category} className={`${styles.categorySection} animate-item stagger-2`}>
                                     <h2 className={styles.categoryTitle}>
                                         <span>{category}</span>
                                         <span className={styles.chevron}>›</span>
                                     </h2>
 
                                     <div className={styles.appsGrid}>
-                                        {categoryApps.map((app) => (
+                                        {categoryApps.map((app, index) => (
                                             <div
                                                 key={app.id}
-                                                className={styles.appRowItem}
+                                                className={`${styles.appRowItem} stagger-grid-item`}
+                                                style={{ '--item-i': index } as React.CSSProperties}
                                                 onClick={() => handleSelectApp(app)}
                                             >
                                                 {app.iconUrl ? (
@@ -318,7 +319,7 @@ export default function Apps() {
                                 </section>
                             ))
                         ) : (
-                            <div className={styles.emptyState}>
+                            <div className={`${styles.emptyState} animate-item stagger-2`}>
                                 <p style={{ margin: '0 0 10px 0', fontSize: 18, color: 'var(--text-primary)', fontWeight: 600 }}>Nenhum aplicativo cadastrado</p>
                                 <p style={{ margin: 0 }}>Acesse o painel de administração em <strong>/admin</strong> para cadastrar seus aplicativos e softwares.</p>
                             </div>

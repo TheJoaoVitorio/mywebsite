@@ -21,12 +21,12 @@ export default function Utils() {
 
     return (
         <div className={styles.container}>
-            <button className={styles.backBtn} onClick={goBack}>
+            <button className={`${styles.backBtn} animate-item stagger-1`} onClick={goBack}>
                 <FiArrowLeft size={20} />
                 <span>Back to Portfolio</span>
             </button>
 
-            <header className={styles.header}>
+            <header className={`${styles.header} animate-item stagger-2`}>
                 <div className={styles.logoGroup}>
                     <FiLayers className={styles.logoIcon} />
                     <span className={styles.logoText}>Tools</span>
@@ -39,7 +39,7 @@ export default function Utils() {
             </header>
 
             <div className={styles.bentoGrid}>
-                {tools.length > 0 ? tools.map(tool => (
+                {tools.length > 0 ? tools.map((tool, index) => (
                     <a 
                         key={tool.id}
                         href={tool.link || '#'} 
@@ -55,11 +55,12 @@ export default function Utils() {
                             '--span-desktop': tool.spanDesktop,
                             '--span-tablet': tool.spanTablet,
                             '--span-mobile': tool.spanMobile,
+                            '--item-i': index,
                             textDecoration: 'none',
                             color: 'inherit',
                             display: 'block'
                         } as React.CSSProperties}
-                        className={`wrapper-link-${tool.id}`}
+                        className={`wrapper-link-${tool.id} stagger-grid-item`}
                     >
                         <style>{`
                             .wrapper-link-${tool.id} {

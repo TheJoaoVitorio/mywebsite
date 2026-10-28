@@ -219,7 +219,7 @@ export default function Palavritas() {
     <div className={styles.container}>
       {message && <div className={styles.message}>{message}</div>}
 
-      <div className={styles.header}>
+      <div className={`${styles.header} animate-item stagger-1`}>
         <h1 className={styles.title}>PALAVRITAS</h1>
       </div>
 

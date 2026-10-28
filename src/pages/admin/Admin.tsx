@@ -477,7 +477,7 @@ export default function Admin() {
             <div className={styles.subtleVignette} />
 
             {/* Sidebar */}
-            <aside className={styles.sidebar}>
+            <aside className={`${styles.sidebar} animate-item-left stagger-1`}>
                 <div className={styles.brand}>
                     <div className={styles.brandBadge}>
                         <img src="/jv-logo.png" alt="JV Logo" className={styles.brandLogo} />
@@ -518,7 +518,7 @@ export default function Admin() {
             </aside>
 
             {/* Main Content */}
-            <main className={styles.main}>
+            <main className={`${styles.main} animate-item stagger-2`}>
                 {view === 'list' && activeTab === 'projects' && (
                     <>
                         <header className={styles.pageHeader}>

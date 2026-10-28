@@ -205,7 +205,7 @@ export default function Files() {
   return (
     <div className={styles.pageContainer}>
       {/* ── Top Header Navigation ─────────────────────────────────── */}
-      <header className={styles.topHeader}>
+      <header className={`${styles.topHeader} animate-item stagger-1`}>
         <button className={styles.backPortfolioBtn} onClick={() => navigate('/')}>
           <FiArrowLeft />
           <span>Voltar ao Portfólio</span>
@@ -224,7 +224,7 @@ export default function Files() {
       </header>
 
       {/* ── OS Window Frame ───────────────────────────────────────── */}
-      <div className={styles.windowFrame}>
+      <div className={`${styles.windowFrame} animate-item-scale stagger-2`}>
         {/* Titlebar */}
         <div className={styles.titlebar}>
           <div className={styles.titlebarNav}>
@@ -395,14 +395,15 @@ export default function Files() {
               </div>
             ) : (
               <div className={styles.itemsGrid}>
-                {displayedItems.map(item => {
+                {displayedItems.map((item, index) => {
                   const isSelected = selectedItem?.id === item.id;
                   const isFolder = item.type === 'folder';
 
                   return (
                     <div
                       key={item.id}
-                      className={`${styles.gridItem} ${isSelected ? styles.gridItemSelected : ''}`}
+                      className={`${styles.gridItem} ${isSelected ? styles.gridItemSelected : ''} stagger-grid-item`}
+                      style={{ '--item-i': index } as React.CSSProperties}
                       onClick={() => handleItemClick(item)}
                       onDoubleClick={() => handleItemDoubleClick(item)}
                       title={isFolder ? `Pasta ${item.name} (${item.fileCount} itens)` : `${item.name} (${item.size})`}
@@ -431,7 +432,7 @@ export default function Files() {
           </div>
 
           {/* Inspector Panel (Right on Desktop, Tab on Mobile) */}
-          <aside className={`${styles.inspectorPanel} ${mobileTab !== 'inspector' ? styles.mobileHidden : ''}`}>
+          <aside className={`${styles.inspectorPanel} ${mobileTab !== 'inspector' ? styles.mobileHidden : ''} animate-item-right stagger-3`}>
             {/* Mobile return button */}
             <div className={styles.mobileInspectorBackRow}>
               <button

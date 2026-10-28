@@ -128,3 +128,115 @@ h1 {
 a {
   color: var(--accent-primary);
 }
+
+
+/* ── Route & Item Transition Animations ──────────────────── */
+
+@keyframes routeFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes routeItemSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes routeItemSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes routeItemSlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes routeItemScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.route-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  animation: routeFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger delay utilities */
+.animate-item {
+  animation: routeItemSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+.animate-item-scale {
+  animation: routeItemScale 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+.animate-item-left {
+  animation: routeItemSlideLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+.animate-item-right {
+  animation: routeItemSlideRight 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+.stagger-1 { animation-delay: 40ms !important; }
+.stagger-2 { animation-delay: 90ms !important; }
+.stagger-3 { animation-delay: 140ms !important; }
+.stagger-4 { animation-delay: 190ms !important; }
+.stagger-5 { animation-delay: 240ms !important; }
+.stagger-6 { animation-delay: 290ms !important; }
+.stagger-7 { animation-delay: 340ms !important; }
+.stagger-8 { animation-delay: 390ms !important; }
+
+/* Dynamic cascade for lists and grids */
+.stagger-grid-item {
+  animation: routeItemSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--item-i, 0) * 45ms + 80ms);
+  will-change: transform, opacity;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .route-wrapper,
+  .animate-item,
+  .animate-item-scale,
+  .animate-item-left,
+  .animate-item-right,
+  .stagger-grid-item {
+    animation: none !important;
+    transform: none !important;
+  }
+}

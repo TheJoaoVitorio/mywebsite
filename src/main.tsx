@@ -1,6 +1,6 @@
-import { StrictMode, Suspense, lazy } from 'react'
+import { StrictMode, Suspense, lazy, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import './index.css'
 import { ThemeProvider } from './context/ThemeContext'
 import ThemeToggle from './components/theme-toggle/ThemeToggle'
@@ -16,12 +16,17 @@ const CalculadoraServico = lazy(() => import('./pages/utils/tools/calculadora-se
 const Palavritas = lazy(() => import('./pages/palavritas/Palavritas.tsx'));
 const Files = lazy(() => import('./pages/files/Files.tsx'));
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ThemeProvider>
-      <BrowserRouter>
-        <ThemeToggle />
-        <Routes>
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Reset scroll smoothly on route transition
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
+  return (
+    <div key={location.pathname} className="route-wrapper">
+      <Routes location={location}>
         <Route path="/" element={<Home />} />
         <Route
           path="/apps"
@@ -93,7 +98,17 @@ createRoot(document.getElementById('root')!).render(
           }
         />
       </Routes>
-    </BrowserRouter>
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ThemeProvider>
+      <BrowserRouter>
+        <ThemeToggle />
+        <AnimatedRoutes />
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
 )

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { FiHeart, FiEye } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProfileCard from '../../components/profile-card/ProfileCard'
 import ProjectCard from '../../components/project-card/ProjectCard'
 import styles from './home.module.css'
@@ -37,11 +37,11 @@ function App() {
   return (
     <div className={styles.container}>
       <main className={styles.mainContent}>
-        <div className={styles.profileSection}>
+        <div className={`${styles.profileSection} animate-item-left stagger-1`}>
           <ProfileCard />
         </div>
-        <div className={styles.contentSection}>
-          <div>
+        <div className={`${styles.contentSection} animate-item stagger-2`}>
+          <div className="animate-item stagger-2">
             <h2>Sobre mim</h2>
             <p>
               Atualmente trabalho com <strong>Delphi</strong> em uma empresa que atua na área de automação comercial, onde
@@ -54,11 +54,11 @@ function App() {
           </div>
 
           <div>
-            <h2 className={styles.subSectionTitle}>Projetos em Destaque</h2>
+            <h2 className={`${styles.subSectionTitle} animate-item stagger-3`}>Projetos em Destaque</h2>
 
             {/* Hero Project */}
             {featuredProject ? (
-              <div className={styles.featuredProject} onClick={() => navigate(`/project/${featuredProject.id}`)}>
+              <div className={`${styles.featuredProject} animate-item-scale stagger-3`} onClick={() => navigate(`/project/${featuredProject.id}`)}>
                 <img
                   src={featuredProject.imageUrl}
                   alt={featuredProject.title}
@@ -83,18 +83,23 @@ function App() {
               </div>
             )}
 
-            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '20px', marginTop: '40px' }}>Explore Mais</h3>
+            <h3 className="animate-item stagger-4" style={{ color: 'var(--text-primary)', fontSize: '1.2rem', marginBottom: '20px', marginTop: '40px' }}>Explore Mais</h3>
 
             <div className={styles.projectsGrid}>
-              {otherProjects.map(project => (
-                <ProjectCard
+              {otherProjects.map((project, index) => (
+                <div
                   key={project.id}
-                  id={project.id}
-                  title={project.title}
-                  imageUrl={project.imageUrl}
-                  likes={project.likes}
-                  views={project.views}
-                />
+                  className="stagger-grid-item"
+                  style={{ '--item-i': index } as React.CSSProperties}
+                >
+                  <ProjectCard
+                    id={project.id}
+                    title={project.title}
+                    imageUrl={project.imageUrl}
+                    likes={project.likes}
+                    views={project.views}
+                  />
+                </div>
               ))}
             </div>
           </div>

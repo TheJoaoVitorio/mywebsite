@@ -56,9 +56,9 @@ export default function Login() {
             <div className={styles.subtleVignette} />
 
             {/* Split Modal Card */}
-            <div className={styles.card}>
+            <div className={`${styles.card} animate-item-scale stagger-1`}>
                 {/* Left Column: Horizon Drift banner with Auth title & Admin restriction notice */}
-                <div className={styles.bannerColumn}>
+                <div className={`${styles.bannerColumn} animate-item-left stagger-2`}>
                     <img
                         src="/horizon-drift.jpg"
                         alt="Horizon Drift"
@@ -75,7 +75,7 @@ export default function Login() {
                 </div>
 
                 {/* Right Column: Form Section */}
-                <div className={styles.formColumn}>
+                <div className={`${styles.formColumn} animate-item stagger-2`}>
                     {/* Back to site arrow */}
                     <button
                         type="button"

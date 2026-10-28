@@ -71,12 +71,12 @@ export default function CalculadoraServico() {
 
   return (
     <div className={styles.page}>
-      <button type="button" className={styles.backBtn} onClick={() => navigate('/utils')}>
+      <button type="button" className={`${styles.backBtn} animate-item stagger-1`} onClick={() => navigate('/utils')}>
         <FiArrowLeft size={18} />
         <span>Voltar para Tools</span>
       </button>
 
-      <div className={styles.calculatorWrapper}>
+      <div className={`${styles.calculatorWrapper} animate-item-scale stagger-2`}>
         <div className={styles.titleSection}>
           <h1>Calculadora de Servico</h1>
           <p>Precifique seus servicos de forma profissional e garanta sua margem de lucro.</p>
