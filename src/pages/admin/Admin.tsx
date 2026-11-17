@@ -5,8 +5,12 @@ import { auth } from '../../services/firebaseConfig';
 import { getProjects, addProject, updateProject, deleteProject, type Project } from '../../services/projectsService';
 import { getTools, addTool, updateTool, deleteTool, type ToolItem } from '../../services/toolsService';
 import { getApps, addApp, updateApp, deleteApp, type AppItem } from '../../services/appsService';
+import {
+    getFavorites, addFavorite, updateFavorite, deleteFavorite, normalizeUrl, getHostname,
+    collectCategories, type FavoriteItem, type FavoriteType, type PreviewMode
+} from '../../services/favoritesService';
 import styles from './admin.module.css';
-import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode, FiEye, FiX, FiSmartphone, FiGlobe } from 'react-icons/fi';
+import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode, FiEye, FiX, FiSmartphone, FiGlobe, FiBookmark } from 'react-icons/fi';
 import { FaWindows, FaApple, FaAndroid } from 'react-icons/fa';
 import ImageModal from '../../components/image-modal/ImageModal';
 import { uploadToCloudinary } from '../../services/cloudinaryService';
@@ -43,13 +47,14 @@ export default function Admin() {
     const navigate = useNavigate();
 
     // Tab State
-    const [activeTab, setActiveTab] = useState<'projects' | 'tools' | 'apps'>('projects');
+    const [activeTab, setActiveTab] = useState<'projects' | 'tools' | 'apps' | 'favorites'>('projects');
     const [view, setView] = useState<'list' | 'edit'>('list');
 
     // Data State
     const [projects, setProjects] = useState<Project[]>([]);
     const [tools, setTools] = useState<ToolItem[]>([]);
     const [apps, setApps] = useState<AppItem[]>([]);
+    const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
     const [refresh, setRefresh] = useState(0);
 
     // Global UI State
@@ -107,6 +112,17 @@ export default function Admin() {
         order: 0
     });
 
+    // Favorites Form State
+    const [editingFavoriteId, setEditingFavoriteId] = useState<string | null>(null);
+    const [favoriteForm, setFavoriteForm] = useState({
+        title: '',
+        url: '',
+        type: 'Favoritos' as FavoriteType,
+        description: '',
+        previewMode: 'live' as PreviewMode,
+        order: 0
+    });
+
     useEffect(() => {
         async function fetchData() {
             if (activeTab === 'projects') {
@@ -118,6 +134,9 @@ export default function Admin() {
             } else if (activeTab === 'apps') {
                 const data = await getApps();
                 setApps(data);
+            } else if (activeTab === 'favorites') {
+                const data = await getFavorites();
+                setFavorites(data);
             }
         }
         fetchData();
@@ -469,6 +488,68 @@ export default function Admin() {
         }
     };
 
+    // --- Favorites Handlers ---
+    const handleNewFavorite = () => {
+        setEditingFavoriteId(null);
+        setFavoriteForm({ title: '', url: '', type: 'Favoritos', description: '', previewMode: 'live', order: favorites.length });
+        setView('edit');
+    };
+
+    const handleEditFavorite = (item: FavoriteItem) => {
+        setEditingFavoriteId(item.id);
+        setFavoriteForm({
+            title: item.title,
+            url: item.url,
+            type: item.type,
+            description: item.description,
+            previewMode: item.previewMode,
+            order: item.order
+        });
+        setView('edit');
+    };
+
+    const handleSaveFavorite = async () => {
+        const url = normalizeUrl(favoriteForm.url);
+        if (!url) {
+            alert("O link é obrigatório.");
+            return;
+        }
+        setLoading(true);
+        try {
+            const data = {
+                title: favoriteForm.title.trim() || getHostname(url),
+                url,
+                type: favoriteForm.type.trim() || 'Favoritos',
+                description: favoriteForm.description.trim(),
+                previewMode: favoriteForm.previewMode,
+                order: Number(favoriteForm.order) || 0
+            };
+            if (editingFavoriteId) await updateFavorite(editingFavoriteId, data);
+            else await addFavorite(data);
+            setRefresh(prev => prev + 1);
+            setView('list');
+        } catch (error) {
+            console.error("Erro ao salvar favorito:", error);
+            alert("Erro ao salvar item.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteFavorite = async () => {
+        if (!editingFavoriteId || !confirm("Tem certeza que deseja apagar este item?")) return;
+        setLoading(true);
+        try {
+            await deleteFavorite(editingFavoriteId);
+            setRefresh(prev => prev + 1);
+            setView('list');
+        } catch (error) {
+            alert("Erro ao deletar");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className={styles.container}>
             {/* Atmospheric dark blue glows from design system */}
@@ -509,6 +590,12 @@ export default function Admin() {
                         onClick={() => { setActiveTab('apps'); setView('list'); }}
                     >
                         <FiSmartphone className={styles.navIcon} /> Apps Store
+                    </div>
+                    <div
+                        className={`${styles.navItem} ${activeTab === 'favorites' ? styles.navItemActive : ''}`}
+                        onClick={() => { setActiveTab('favorites'); setView('list'); }}
+                    >
+                        <FiBookmark className={styles.navIcon} /> Save Favorites
                     </div>
                 </nav>
 
@@ -1337,6 +1424,171 @@ export default function Admin() {
                                         value={appForm.downloadUrl}
                                         onChange={e => setAppForm({ ...appForm, downloadUrl: e.target.value })}
                                         placeholder="https://www.mediafire.com/file/..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* FAVORITES SECTION */}
+                {view === 'list' && activeTab === 'favorites' && (
+                    <>
+                        <header className={styles.pageHeader}>
+                            <div className={styles.pageTitle}>
+                                <h1>Save Favorites</h1>
+                                <p>Salve sites como Favoritos, ideias de Skills e referências de UI.</p>
+                            </div>
+                            <button className={styles.primaryButton} onClick={handleNewFavorite}>
+                                <FiPlus /> New Item
+                            </button>
+                        </header>
+                        <div className={styles.appsAdminGrid}>
+                            {favorites.map(item => (
+                                <div key={item.id} className={styles.appAdminCard} onClick={() => handleEditFavorite(item)}>
+                                    <div className={styles.appAdminIconWrapper}>
+                                        <FiGlobe size={28} color="#58a6ff" />
+                                    </div>
+                                    <div className={styles.appAdminInfo}>
+                                        <div className={styles.appAdminHeaderRow}>
+                                            <h3 className={styles.appAdminTitle}>{item.title}</h3>
+                                            <span className={styles.appAdminCategory}>{item.type}</span>
+                                        </div>
+                                        <p className={styles.appAdminDesc}>{item.description || item.url}</p>
+                                        <div className={styles.appAdminMeta}>
+                                            <span>{getHostname(item.url)}</span>
+                                            <span>{item.previewMode === 'live' ? 'Página ao vivo' : item.previewMode === 'screenshot' ? 'Screenshot' : 'Sem prévia'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {favorites.length === 0 && (
+                                <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#8c93a0', padding: '60px 20px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed rgba(255,255,255,0.1)' }}>
+                                    <p style={{ margin: 0 }}>Nenhum item salvo ainda. Clique em "+ New Item" para cadastrar o primeiro!</p>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+
+                {view === 'edit' && activeTab === 'favorites' && (
+                    <div className={styles.formContainer}>
+                        <header className={styles.pageHeader} style={{ borderBottom: 'none', marginBottom: 20 }}>
+                            <div className={styles.pageTitle}>
+                                <button className={styles.secondaryButton} onClick={() => setView('list')} style={{ marginBottom: 16 }}>
+                                    <FiArrowLeft /> Voltar para Lista
+                                </button>
+                                <h1>{editingFavoriteId ? 'Editar Item' : 'Cadastrar Novo Item'}</h1>
+                            </div>
+                            <div className={styles.actions} style={{ display: 'flex', gap: 12 }}>
+                                {editingFavoriteId && (
+                                    <button className={styles.dangerButton} onClick={handleDeleteFavorite} disabled={loading}>
+                                        <FiTrash2 /> Excluir
+                                    </button>
+                                )}
+                                <button className={styles.primaryButton} onClick={handleSaveFavorite} disabled={loading}>
+                                    <FiSave /> {loading ? 'Salvando...' : 'Salvar Item'}
+                                </button>
+                            </div>
+                        </header>
+
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>1</div>
+                                <div className={styles.sectionTitle}>Informações</div>
+                            </div>
+                            <div className={styles.sectionContent}>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Categoria</label>
+                                    <div className={styles.platformsToggleGroup}>
+                                        {collectCategories([
+                                            ...favorites,
+                                            ...(favoriteForm.type.trim() ? [{ type: favoriteForm.type.trim() } as FavoriteItem] : [])
+                                        ]).map(t => (
+                                            <button
+                                                key={t}
+                                                type="button"
+                                                className={`${styles.platformPill} ${favoriteForm.type === t ? styles.platformPillActive : ''}`}
+                                                onClick={() => setFavoriteForm({ ...favoriteForm, type: t })}
+                                            >
+                                                <span>{t}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <input
+                                        className={styles.input}
+                                        style={{ marginTop: 10 }}
+                                        value={favoriteForm.type}
+                                        onChange={e => setFavoriteForm({ ...favoriteForm, type: e.target.value })}
+                                        placeholder="Ou digite uma nova categoria (ex: Ferramentas, Inspiração...)"
+                                    />
+                                    <span className={styles.inputHint}>Clique numa categoria existente ou digite um nome novo — ela é criada ao salvar.</span>
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Link do Site</label>
+                                    <input
+                                        className={styles.input}
+                                        value={favoriteForm.url}
+                                        onChange={e => setFavoriteForm({ ...favoriteForm, url: e.target.value })}
+                                        placeholder="https://exemplo.com"
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Título</label>
+                                    <input
+                                        className={styles.input}
+                                        value={favoriteForm.title}
+                                        onChange={e => setFavoriteForm({ ...favoriteForm, title: e.target.value })}
+                                        placeholder="Se vazio, usa o domínio do site"
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Descrição (opcional)</label>
+                                    <textarea
+                                        className={styles.textarea}
+                                        value={favoriteForm.description}
+                                        onChange={e => setFavoriteForm({ ...favoriteForm, description: e.target.value })}
+                                        placeholder="Por que salvou? Ideia, uso, observações..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionHeader}>
+                                <div className={styles.sectionNumber}>2</div>
+                                <div className={styles.sectionTitle}>Prévia no Card</div>
+                            </div>
+                            <div className={styles.sectionContent}>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Como exibir o site</label>
+                                    <div className={styles.platformsToggleGroup}>
+                                        {([
+                                            ['live', 'Carregar página'],
+                                            ['screenshot', 'Screenshot'],
+                                            ['none', 'Sem prévia']
+                                        ] as [PreviewMode, string][]).map(([mode, label]) => (
+                                            <button
+                                                key={mode}
+                                                type="button"
+                                                className={`${styles.platformPill} ${favoriteForm.previewMode === mode ? styles.platformPillActive : ''}`}
+                                                onClick={() => setFavoriteForm({ ...favoriteForm, previewMode: mode })}
+                                            >
+                                                <span>{label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <span className={styles.inputHint}>
+                                        "Carregar página" embute o site no card; alguns sites bloqueiam isso (ficam em branco) — nesse caso use "Screenshot", que gera uma imagem via thum.io.
+                                    </span>
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.label}>Ordem de Exibição</label>
+                                    <input
+                                        className={styles.input}
+                                        type="number"
+                                        value={favoriteForm.order}
+                                        onChange={e => setFavoriteForm({ ...favoriteForm, order: parseInt(e.target.value) || 0 })}
                                     />
                                 </div>
                             </div>

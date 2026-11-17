@@ -1,0 +1,323 @@
+/* ── Save Favorites (mesmo padrão visual de Apps) ── */
+
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: var(--bg-page, #000000);
+    color: var(--text-primary, #ffffff);
+    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 40px 32px 80px 32px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.contentWrapper {
+    width: 100%;
+    max-width: 1240px;
+    display: flex;
+    flex-direction: column;
+}
+
+.topNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+}
+
+.backBtn {
+    background: transparent;
+    border: none;
+    color: var(--accent-primary, #2997ff);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    font-family: inherit;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.backBtn:hover {
+    opacity: 0.8;
+    transform: translateX(-2px);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-surface-secondary, rgba(255, 255, 255, 0.06));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary, #a1a1a6);
+}
+
+.section {
+    margin-bottom: 48px;
+}
+
+.sectionTitle {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+}
+
+.count {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 9999px;
+    background: var(--accent-subtle, rgba(41, 151, 255, 0.18));
+    color: var(--accent-primary, #2997ff);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 1000px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .container { padding: 24px 16px 60px 16px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+    background: var(--bg-surface-secondary, #1c1c1e);
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.25));
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-primary, #2997ff);
+}
+
+/* Preview area: 16:10, iframe rendered at 1280x800 and scaled down via JS */
+.preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+}
+
+.previewFallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-muted, #8e8e93);
+    font-size: 13px;
+}
+
+.previewFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: top left;
+    pointer-events: none;
+    background: #ffffff;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.previewImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.previewLoaded {
+    opacity: 1;
+}
+
+.cardInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+}
+
+.cardText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.cardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.2px;
+}
+
+.cardSub {
+    font-size: 12.5px;
+    color: var(--text-muted, #8e8e93);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.openBtn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-subtle, rgba(41, 151, 255, 0.18));
+    color: var(--accent-primary, #2997ff);
+    transition: all 0.2s ease;
+}
+
+.card:hover .openBtn {
+    background: var(--accent-primary, #2997ff);
+    color: #ffffff;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted, #8e8e93);
+    background: var(--bg-surface, rgba(255, 255, 255, 0.02));
+    border: 1px dashed var(--border-primary, rgba(255, 255, 255, 0.1));
+    border-radius: 20px;
+    font-size: 15px;
+}
+
+/* ── Category title as link ── */
+.sectionLink {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chevron {
+    color: var(--text-muted, #8e8e93);
+    font-weight: 400;
+    font-size: 20px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.sectionLink:hover .chevron {
+    transform: translateX(3px);
+    color: var(--accent-primary, #2997ff);
+}
+
+/* ── Apple-style carousel ── */
+.carouselWrap {
+    position: relative;
+}
+
+.carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 4px 2px 14px;
+    scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carouselCard {
+    flex: 0 0 calc((100% - 40px) / 3);
+    scroll-snap-align: start;
+}
+
+@media (max-width: 1000px) {
+    .carouselCard { flex-basis: calc((100% - 20px) / 2); }
+}
+
+@media (max-width: 600px) {
+    .carouselCard { flex-basis: 85%; }
+}
+
+.navBtn {
+    position: absolute;
+    top: calc(50% - 40px);
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
+    background: var(--bg-surface-secondary, #1c1c1e);
+    color: var(--text-primary, #ffffff);
+    box-shadow: var(--shadow-sm, 0 4px 14px rgba(0, 0, 0, 0.35));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.navBtn:hover:not(:disabled) {
+    background: var(--accent-primary, #2997ff);
+    color: #ffffff;
+    transform: scale(1.06);
+}
+
+.navBtn:disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.navPrev { left: -14px; }
+.navNext { right: -14px; }
+
+@media (max-width: 600px) {
+    .navBtn { display: none; }
+}

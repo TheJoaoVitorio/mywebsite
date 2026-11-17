@@ -82,7 +82,6 @@ export default function ProfileCard({
                     Files
                 </Link>
             </div>
-
             <div className={styles.achievements}>
                 <h3 className={styles.achievementsTitle}>Stack & Technologies</h3>
                 <div className={styles.techStack}>

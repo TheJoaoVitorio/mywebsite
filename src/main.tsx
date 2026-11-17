@@ -15,6 +15,7 @@ const Apps = lazy(() => import('./pages/apps/Apps'));
 const CalculadoraServico = lazy(() => import('./pages/utils/tools/calculadora-servico/CalculadoraServico'));
 const Palavritas = lazy(() => import('./pages/palavritas/Palavritas.tsx'));
 const Files = lazy(() => import('./pages/files/Files.tsx'));
+const SaveFavorites = lazy(() => import('./pages/save-favorites/SaveFavorites'));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -41,6 +42,14 @@ function AnimatedRoutes() {
           element={
             <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando arquivos...</div>}>
               <Files />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/save-favorites"
+          element={
+            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px', color: 'var(--text-primary)' }}>Carregando favoritos...</div>}>
+              <SaveFavorites />
             </Suspense>
           }
         />
