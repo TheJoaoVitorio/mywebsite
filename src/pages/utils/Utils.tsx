@@ -4,6 +4,9 @@ import { FiArrowLeft, FiLayers } from 'react-icons/fi';
 import { subscribeToTools, type ToolItem } from '../../services/toolsService';
 import styles from './Utils.module.css';
 
+/** Keeps a card's span within the number of columns of the current grid. */
+const clampSpan = (value: number, max: number) => Math.min(Math.max(Number(value) || 1, 1), max);
+
 export default function Utils() {
     const navigate = useNavigate();
     const [tools, setTools] = useState<ToolItem[]>([]);
@@ -52,13 +55,14 @@ export default function Utils() {
                         target={tool.link && tool.link.startsWith('http') ? "_blank" : undefined}
                         rel={tool.link && tool.link.startsWith('http') ? "noopener noreferrer" : undefined}
                         style={{ 
-                            '--span-desktop': tool.spanDesktop,
-                            '--span-tablet': tool.spanTablet,
-                            '--span-mobile': tool.spanMobile,
+                            '--span-desktop': clampSpan(tool.spanDesktop, 12),
+                            '--span-tablet': clampSpan(tool.spanTablet, 6),
+                            '--span-mobile': 1,
                             '--item-i': index,
                             textDecoration: 'none',
                             color: 'inherit',
-                            display: 'block'
+                            display: 'block',
+                            minWidth: 0
                         } as React.CSSProperties}
                         className={`wrapper-link-${tool.id} stagger-grid-item`}
                     >

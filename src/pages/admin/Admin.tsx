@@ -12,6 +12,7 @@ import {
 import styles from './admin.module.css';
 import { FiHome, FiBox, FiLogOut, FiPlus, FiTrash2, FiSave, FiArrowLeft, FiUpload, FiLink, FiLayers, FiCode, FiEye, FiX, FiSmartphone, FiGlobe, FiBookmark } from 'react-icons/fi';
 import { FaWindows, FaApple, FaAndroid } from 'react-icons/fa';
+import ToolsPagePreview from './ToolsPagePreview';
 import ImageModal from '../../components/image-modal/ImageModal';
 import { uploadToCloudinary } from '../../services/cloudinaryService';
 
@@ -1064,36 +1065,10 @@ export default function Admin() {
                         {/* LIVE PREVIEW SECTION */}
                         <div className={styles.formSection} style={{ marginTop: '20px' }}>
                             <div className={styles.sectionHeader}>
-                                <div className={styles.sectionTitle}>Live Preview (Desktop View)</div>
+                                <div className={styles.sectionTitle}>Live Preview (página /utils com os outros cards)</div>
                             </div>
-                            <div className={styles.sectionContent} style={{ display: 'flex', justifyContent: 'center', backgroundColor: '#000000', padding: '40px', borderRadius: '8px', overflowX: 'auto' }}>
-                                <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(12, 1fr)',
-                                    gridAutoRows: '240px',
-                                    gap: '20px',
-                                    width: '100%',
-                                    minWidth: '800px',
-                                    maxWidth: '1100px'
-                                }}>
-                                    <div style={{ gridColumn: `span ${toolForm.spanDesktop}`, textDecoration: 'none', color: '#fff', position: 'relative' }}>
-                                        <style>{`
-                                            .wrapper-preview-admin {
-                                                border-radius: 28px;
-                                                height: 100%;
-                                                width: 100%;
-                                                overflow: hidden;
-                                                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-                                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                                            }
-                                            ${toolForm.css}
-                                        `}</style>
-                                        <div
-                                            className="wrapper-preview-admin"
-                                            dangerouslySetInnerHTML={{ __html: toolForm.html }}
-                                        />
-                                    </div>
-                                </div>
+                            <div className={styles.sectionContent}>
+                                <ToolsPagePreview tools={tools} editingId={editingToolId} draft={toolForm} />
                             </div>
                         </div>
                     </div>
